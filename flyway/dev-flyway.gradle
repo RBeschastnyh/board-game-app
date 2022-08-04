@@ -1,0 +1,8 @@
+project.ext['flyway.driver'] = 'org.postgresql.Driver'
+project.ext['flyway.url'] = ''
+project.ext['flyway.user'] = ''
+project.ext['flyway.password'] = ''
+project.ext['flyway.schemas'] = ''
+project.ext['flyway.outOfOrder'] = true
+project.ext['flyway.locations'] = "filesystem:${project.projectDir}/src/main/resources/db/migration"
+project.ext['flyway.baselineOnMigrate'] = true
