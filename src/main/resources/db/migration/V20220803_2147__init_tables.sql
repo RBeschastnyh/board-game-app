@@ -2,14 +2,14 @@ create table guest (
   id serial primary key,
   login varchar(40) not null,
   full_name varchar(150) not null,
-  gender varchar(2) not null
+  password varchar(150) not null
 );
 
 comment on table guest is 'Information about your beloved guest';
 comment on column guest.id is 'Guest''s unique identifier';
 comment on column guest.login is 'Guest''s login';
 comment on column guest.full_name is 'Guest''s full name';
-comment on column guest.gender is 'Guest''s gender';
+comment on column guest.password is 'Guest''s password';
 
 create table cocktail (
     id serial primary key,

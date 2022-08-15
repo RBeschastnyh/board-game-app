@@ -2,6 +2,8 @@ package ru.strawberry.homebar.service.api;
 
 import java.util.List;
 import ru.strawberry.homebar.dto.CocktailDto;
+import ru.strawberry.homebar.dto.FeedbackDto;
+import ru.strawberry.homebar.exception.NotFoundException;
 
 /**
  * Service for operating cocktail requests.
@@ -20,12 +22,12 @@ public interface CocktailService {
   List<CocktailDto> getAllCocktails();
 
   /**
-   * Gets all cocktails suits filter.
+   * Creates or updates users' cocktail rate.
    *
-   * @return list of cocktails with applied filter
-   * @see CocktailDto
+   * @param cocktailId cocktail unique identifier
+   * @param rateDto rate info
+   * @see FeedbackDto
    * @since 1.0
    */
-  List<CocktailDto> getAllCocktailsApplyFilter();
-
+  void createFeedback(Long cocktailId, FeedbackDto rateDto) throws NotFoundException;
 }

@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.springframework.jmx.export.annotation.ManagedAttribute;
 import ru.strawberry.homebar.dto.CocktailDto;
 import ru.strawberry.homebar.entity.Cocktail;
 
@@ -14,7 +12,9 @@ import ru.strawberry.homebar.entity.Cocktail;
  *
  * @author RBeschastnykh
  */
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {FeedbackMapper.class})
 public interface CocktailMapper {
 
   List<CocktailDto> toListDto(List<Cocktail> source);

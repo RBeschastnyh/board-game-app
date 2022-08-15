@@ -35,5 +35,4 @@ public class CocktailDto {
 
   @Schema(title = "Cocktail average rating from 1 to 10", example = "8.3")
   private Double rating;
-
 }

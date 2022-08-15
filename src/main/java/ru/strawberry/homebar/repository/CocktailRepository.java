@@ -1,6 +1,7 @@
 package ru.strawberry.homebar.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.strawberry.homebar.entity.Cocktail;
 
 /**
@@ -8,6 +9,5 @@ import ru.strawberry.homebar.entity.Cocktail;
  *
  * @author RBeschastnykh
  */
-public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
-
-}
+@Repository
+public interface CocktailRepository extends JpaRepository<Cocktail, Long> {}

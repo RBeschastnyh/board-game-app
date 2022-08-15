@@ -1,5 +1,6 @@
 package ru.strawberry.homebar.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -10,9 +11,12 @@ import lombok.Data;
 @Data
 public class FeedbackDto {
 
-  private Long id;
-  private String author;
-  private Integer rating;
-  private String text;
+  @Schema(title = "Author identifier", required = true)
+  private Long authorId;
 
+  @Schema(title = "Author identifier", required = true)
+  private Integer rate;
+
+  @Schema(title = "Feedback text")
+  private String text;
 }
