@@ -1,4 +1,4 @@
-package ru.strawberry.homebar.entity;
+package ru.strawberry.homebar.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

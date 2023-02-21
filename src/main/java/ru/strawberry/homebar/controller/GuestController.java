@@ -1,5 +1,7 @@
 package ru.strawberry.homebar.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +21,13 @@ import ru.strawberry.homebar.service.api.GuestService;
 @RestController
 @RequestMapping("/guest")
 @RequiredArgsConstructor
+@Tag(name = "guest api", description = "Работа с гостями")
 public class GuestController {
 
   private final GuestService guestService;
 
   @PostMapping("/create")
+  @Operation(tags = {"guest api"}, summary = "Создание гостевого пользователя")
   public ResponseEntity<?> createGuest(@RequestBody GuestDto guestDto) throws GuestAlreadyExistsException {
     guestService.createGuest(guestDto);
     return new ResponseEntity<>(null, HttpStatus.CREATED);

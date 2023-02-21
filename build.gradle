@@ -13,6 +13,12 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	swaggerVersion = '2.2.7'
+	springdocOpenapiVersion = '1.6.9'
+	vavrVersion = '0.9.0'
+}
+
 apply from: "flyway/dev-flyway.gradle"
 
 dependencies {
@@ -22,6 +28,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "io.swagger.core.v3:swagger-annotations:2.2.0"
 	implementation "org.mapstruct:mapstruct:1.5.1.Final"
+	implementation "io.swagger.core.v3:swagger-annotations:$swaggerVersion"
+	implementation "org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion"
+	implementation "io.vavr:vavr:$vavrVersion"
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.1.Final"
 

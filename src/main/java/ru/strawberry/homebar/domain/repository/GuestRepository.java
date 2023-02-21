@@ -1,9 +1,9 @@
-package ru.strawberry.homebar.repository;
+package ru.strawberry.homebar.domain.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.strawberry.homebar.entity.Guest;
+import ru.strawberry.homebar.domain.entity.Guest;
 
 /**
  * Repository for interaction with Guest db.

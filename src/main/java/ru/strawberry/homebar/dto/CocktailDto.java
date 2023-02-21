@@ -1,38 +1,39 @@
 package ru.strawberry.homebar.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Response entity for cocktail api.
  *
  * @author RBeschastnykh
  */
-@Data
+@Getter
+@Setter
 public class CocktailDto {
 
-  @Schema(title = "Unique identifier")
+  @Schema(title = "Unique identifier", example = "1")
   private Long id;
 
-  @Schema(title = "The name of the cocktail", required = true, example = "Tuxedo")
-  private String cocktailName;
+  @Schema(title = "The name of the cocktail", example = "Tuxedo")
+  private String name;
 
-  @Schema(title = "Cocktail description", required = true, example = "Освежает и вставляет")
+  @Schema(title = "List of ingredients")
+  private String ingredients;
+
+  @Schema(title = "Cocktail description")
   private String description;
 
-  @Schema(title = "Allergens in cocktail", required = true)
-  private List<String> allergens;
+  @Schema(title = "Cocktail supply")
+  private String supply;
 
-  @Schema(title = "List of ingredients", required = true)
-  private List<String> ingredients;
+  @Schema(title = "Cocktail group id")
+  private Long groupId;
 
-  @Schema(title = "List of feedbacks")
-  private List<FeedbackDto> feedbacks;
-
-  @Schema(title = "Tags to find cocktail in a list", required = true, example = "Горький")
-  private List<String> tags;
-
-  @Schema(title = "Cocktail average rating from 1 to 10", example = "8.3")
-  private Double rating;
+  @Schema(title = "Tags to find cocktail in a list", example = "Горький")
+  private List<TagDto> tags;
 }
