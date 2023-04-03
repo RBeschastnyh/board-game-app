@@ -17,7 +17,7 @@ public class RestExceptionHandler {
   @ExceptionHandler({NotFoundException.class})
   public ResponseEntity<ErrorInfoDto> handleNotFoundException(NotFoundException exception) {
     ErrorInfoDto errorInfoDto = new ErrorInfoDto();
-    errorInfoDto.setMessage(exception.getMessage());
+    errorInfoDto.setMessage(exception.getProblemEntity().getEntityName());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfoDto);
   }
 

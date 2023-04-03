@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.strawberry.homebar.dto.GuestDto;
 import ru.strawberry.homebar.exception.GuestAlreadyExistsException;
-import ru.strawberry.homebar.mapper.GuestMapper;
 import ru.strawberry.homebar.domain.repository.GuestRepository;
+import ru.strawberry.homebar.mapper.GuestMapper;
 import ru.strawberry.homebar.service.api.GuestService;
 
 /**

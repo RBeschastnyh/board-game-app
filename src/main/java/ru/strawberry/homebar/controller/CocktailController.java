@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,5 +49,24 @@ public class CocktailController {
       })
   public ResponseEntity<List<CocktailDto>> getCocktails(@RequestBody CocktailFilterDto filterDto) {
     return ResponseEntity.ok(cocktailService.getAllCocktails(filterDto));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(tags = {"cocktail api"}, summary = "Получение коктейля по идентификатору")
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "Успешно получен коктейль",
+              content = @Content(mediaType = "application/json", schema = @Schema(implementation = CocktailDto.class))
+          ),
+          @ApiResponse(
+              responseCode = "500",
+              description = "Unknown error",
+              content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfoDto.class))
+          )
+      })
+  public ResponseEntity<CocktailDto> getCocktailById(@PathVariable Long id) {
+    return ResponseEntity.ok(cocktailService.getById(id));
   }
 }

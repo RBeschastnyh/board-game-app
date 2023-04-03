@@ -21,4 +21,13 @@ public interface CocktailService {
    * @since 1.0
    */
   List<CocktailDto> getAllCocktails(CocktailFilterDto filterDto);
+
+  /**
+   * Get cocktail specified by unique id.
+   *
+   * @param id unique identifier
+   * @return cocktail, if exists
+   * @since 1.0
+   */
+  CocktailDto getById(Long id);
 }

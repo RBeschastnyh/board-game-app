@@ -1,6 +1,7 @@
 package ru.strawberry.homebar.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ru.strawberry.homebar.domain.entity.Cocktail;
 
@@ -10,4 +11,4 @@ import ru.strawberry.homebar.domain.entity.Cocktail;
  * @author RBeschastnykh
  */
 @Repository
-public interface CocktailRepository extends JpaRepository<Cocktail, Long> {}
+public interface CocktailRepository extends PagingAndSortingRepository<Cocktail, Long>, JpaSpecificationExecutor<Cocktail> {}

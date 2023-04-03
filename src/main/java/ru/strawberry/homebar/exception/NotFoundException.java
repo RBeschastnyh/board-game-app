@@ -5,17 +5,26 @@ package ru.strawberry.homebar.exception;
  *
  * @author RBeschastnykh
  */
-public class NotFoundException extends Exception {
+public class NotFoundException extends RuntimeException {
 
-  public NotFoundException() {
+  private final ProblemEntity problemEntity;
+
+  public NotFoundException(ProblemEntity problemEntity) {
     super();
+    this.problemEntity = problemEntity;
   }
 
-  public NotFoundException(String message) {
+  public NotFoundException(ProblemEntity problemEntity, String message) {
     super(message);
+    this.problemEntity = problemEntity;
   }
 
-  public NotFoundException(String message, Throwable cause) {
+  public NotFoundException(ProblemEntity problemEntity,String message, Throwable cause) {
     super(message, cause);
+    this.problemEntity = problemEntity;
+  }
+
+  public ProblemEntity getProblemEntity() {
+    return this.problemEntity;
   }
 }
