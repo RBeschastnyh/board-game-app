@@ -1,1 +1,7 @@
 rootProject.name = 'homebar'
+include 'board-game-unit'
+include 'bartending-unit'
+include 'quiz-please-unit'
+include 'main-unit'
+include 'bot-unit'
+

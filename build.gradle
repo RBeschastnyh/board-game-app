@@ -1,46 +1,22 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.2'
 	id 'org.flywaydb.flyway' version '9.0.4'
-	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
-	id 'java'
 }
 
 group = 'ru.strawberry'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'https://repo.spring.io/milestone'
+	}
 }
 
 ext {
-	swaggerVersion = '2.2.7'
-	springdocOpenapiVersion = '1.6.9'
-	jpamodelgenVersion = '5.4.28.Final'
+	telegramBotsVersion = "6.9.0"
+	springContextVersion = "5.3.23"
+	springWebFluxVersion = "3.2.5"
+	jacksonVersion = "2.17.2"
 }
 
 apply from: "flyway/dev-flyway.gradle"
-
-dependencies {
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation "io.swagger.core.v3:swagger-annotations:2.2.0"
-	implementation "org.mapstruct:mapstruct:1.5.1.Final"
-	implementation "io.swagger.core.v3:swagger-annotations:$swaggerVersion"
-	implementation "org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion"
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.1.Final"
-	annotationProcessor "org.hibernate:hibernate-jpamodelgen:$jpamodelgenVersion"
-
-	testCompileOnly 'org.projectlombok:lombok:1.18.24'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-	runtimeOnly 'org.postgresql:postgresql'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
