@@ -1,2 +1,2 @@
-# homebarr-app
-Small application to simplify your boozing with friends
+# board-games-bot
+Small Telegram bot for choosing board games
