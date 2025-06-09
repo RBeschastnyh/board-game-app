@@ -3,6 +3,11 @@ package ru.strawberry.boardgame.bot;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+/**
+ * Bot class. Uses telegram api.
+ *
+ * @author RBeschastnykh
+ */
 public class BoardGameBot extends TelegramLongPollingBot {
 
     public BoardGameBot(String token) {
