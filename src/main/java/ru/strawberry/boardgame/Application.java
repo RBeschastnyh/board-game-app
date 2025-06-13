@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.strawberry.boardgame.bot.BoardGameBot;
 
+
 /**
  * Main class.
  *
@@ -13,7 +14,9 @@ import ru.strawberry.boardgame.bot.BoardGameBot;
 public class Application {
 
     public static void main(String[] args) throws TelegramApiException {
+        String botToken = System.getenv("BOT_TOKEN");
+
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        telegramBotsApi.registerBot(new BoardGameBot(null));
+        telegramBotsApi.registerBot(new BoardGameBot(botToken));
     }
 }
