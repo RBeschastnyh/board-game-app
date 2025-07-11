@@ -10,17 +10,7 @@ public interface Command {
     /**
      * Process command. This is asynchronous operation, user will get response after all actions
      */
-    void process();
-
-    /**
-     * Validating user input command.
-     * <p>
-     * It includes:
-     * - Syntax of command
-     * - Checking current user state in cache
-     * - Check if command can be run by user
-     */
-    void validate();
+    void process(CommandRequest command);
 
     /**
      * Message to return to user. Relies on current state, so message is intermediate.

@@ -26,9 +26,18 @@ dependencies {
 	implementation "redis.clients:jedis:$redisVersion"
 	implementation "org.slf4j:slf4j-api:2.0.16"
 	implementation "org.slf4j:slf4j-simple:2.0.16"
+	implementation "io.lettuce:lettuce-core:6.3.2.RELEASE"
 
 	compileOnly "org.projectlombok:lombok:1.18.22"
 	annotationProcessor "org.projectlombok:lombok:1.18.22"
+}
+
+flyway {
+	url = "${System.env.FLYWAY_URL}"
+	user = "${System.env.FLYWAY_USER}"
+	password = "${System.env.FLYWAY_PASSWORD}"
+	schemas = ["${System.env.FLYWAY_SCHEMA}"]
+	placeholders = ["current_schema": "${System.env.FLYWAY_CURRENT_SCHEMA}"]
 }
 
 apply from: "flyway/dev-flyway.gradle"

@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.strawberry.boardgame.bot.service.CommandProcessor;
+import ru.strawberry.boardgame.bot.service.command.CommandRequest;
 
 /**
  * Bot class. Uses telegram api.
@@ -34,7 +35,11 @@ public class BoardGameBot extends TelegramLongPollingBot {
 
         try {
             if (text.startsWith("/")) {
-                response = commandProcessor.process(text.substring(1));
+                CommandRequest commandRequest = CommandRequest.builder()
+                        .tgId(message.getChatId())
+                        .command(text.substring(1))
+                        .build();
+                response = commandProcessor.process(commandRequest);
             } else {
 
             }

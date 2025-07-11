@@ -1,7 +1,7 @@
 create table ${current_schema}.users (
     id                bigint primary key generated always as identity,
     tg_id             int not null unique,
-    tesera_name       varchar(200) not null,
+    tesera_name       varchar(200)
     unique(tg_id, tesera_name)
 );
 
