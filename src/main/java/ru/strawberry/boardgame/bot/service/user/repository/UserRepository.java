@@ -5,4 +5,6 @@ public interface UserRepository {
     boolean checkIfUserExists(Long tgId);
 
     void createUser(Long tgId);
+
+    boolean checkIfTeseraUserIsRegistered(Long tgId);
 }

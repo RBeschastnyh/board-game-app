@@ -13,9 +13,8 @@ import javax.persistence.NoResultException;
 public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean checkIfUserExists(Long tgId) {
-        Session session = SessionContextImpl.getInstance().getSession();
-
-        try {
+        try (Session session = SessionContextImpl.getInstance().getSession()) {
+            session.beginTransaction();
             session.createQuery("SELECT u FROM User u WHERE u.tgId = :tgId", User.class)
                     .setHint(QueryHints.READ_ONLY, true)
                     .setParameter("tgId", tgId)
@@ -42,5 +41,23 @@ public class UserRepositoryImpl implements UserRepository {
         session.persist(user);
         session.flush();
         session.close();
+    }
+
+    @Override
+    public boolean checkIfTeseraUserIsRegistered(Long tgId) {
+        try (Session session = SessionContextImpl.getInstance().getSession()) {
+            session.beginTransaction();
+            session.createQuery("SELECT u FROM User u WHERE u.tgId = :tgId and u.teseraName is not null", User.class)
+                    .setHint(QueryHints.READ_ONLY, true)
+                    .setParameter("tgId", tgId)
+                    .getSingleResult();
+        } catch (NoResultException nrex) {
+            return false;
+        } catch (Exception ex) {
+            log.error("Error while getting user from DB: {}", ex.getMessage());
+            throw new RuntimeException("Возникла ошибка, попробуйте позже");
+        }
+
+        return true;
     }
 }

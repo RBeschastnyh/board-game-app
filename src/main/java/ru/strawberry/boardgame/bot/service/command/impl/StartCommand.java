@@ -36,7 +36,7 @@ public class StartCommand implements Command {
         // create if not otherwise return
     }
 
-    protected void validate(Long from) {
+    private void validate(Long from) {
         log.info("Start processing start command");
         log.debug("Command text {}", this.originalCommand);
         if (this.originalCommand == null || this.originalCommand.isBlank()) {

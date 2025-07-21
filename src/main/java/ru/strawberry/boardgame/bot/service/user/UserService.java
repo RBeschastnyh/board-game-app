@@ -32,4 +32,8 @@ public class UserService {
             userRepository.createUser(tgId);
         }
     }
+
+    public boolean checkIfTeseraUserIsRegistered(Long tgId) {
+        return userRepository.checkIfTeseraUserIsRegistered(tgId);
+    }
 }

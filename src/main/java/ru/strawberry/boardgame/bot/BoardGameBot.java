@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.strawberry.boardgame.bot.service.CommandProcessor;
 import ru.strawberry.boardgame.bot.service.command.CommandRequest;
+import ru.strawberry.boardgame.bot.service.textprocessors.PlainTextProcessor;
 
 /**
  * Bot class. Uses telegram api.
@@ -18,10 +19,12 @@ import ru.strawberry.boardgame.bot.service.command.CommandRequest;
 public class BoardGameBot extends TelegramLongPollingBot {
 
     private final CommandProcessor commandProcessor;
+    private final PlainTextProcessor plainTextProcessor;
 
     public BoardGameBot(String token) {
         super(token);
         this.commandProcessor = new CommandProcessor();
+        this.plainTextProcessor = new PlainTextProcessor();
     }
 
     @Override
@@ -34,14 +37,14 @@ public class BoardGameBot extends TelegramLongPollingBot {
         String response = null;
 
         try {
+            CommandRequest commandRequest = CommandRequest.builder()
+                    .tgId(message.getChatId())
+                    .command(text.startsWith("/") ? text.substring(1) : text)
+                    .build();
             if (text.startsWith("/")) {
-                CommandRequest commandRequest = CommandRequest.builder()
-                        .tgId(message.getChatId())
-                        .command(text.substring(1))
-                        .build();
                 response = commandProcessor.process(commandRequest);
             } else {
-
+                response = plainTextProcessor.process(commandRequest);
             }
 
             SendMessage sendMessage = SendMessage.builder()

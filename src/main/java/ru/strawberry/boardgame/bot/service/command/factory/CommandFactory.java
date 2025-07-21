@@ -2,6 +2,7 @@ package ru.strawberry.boardgame.bot.service.command.factory;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.strawberry.boardgame.bot.service.command.Command;
+import ru.strawberry.boardgame.bot.service.command.impl.RegisterTeseraUserCommand;
 import ru.strawberry.boardgame.bot.service.command.impl.StartCommand;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,11 @@ public class CommandFactory {
         if (text.contains("start")) {
             log.info("Requested start command");
             return new StartCommand(text);
+        }
+
+        if (text.contains("regteserauser")) {
+            log.info("Requested register tesera user command");
+            return new RegisterTeseraUserCommand();
         }
 
         throw new IllegalArgumentException("");
