@@ -11,7 +11,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CommandRequest {
-
     private Long tgId;
     private String command;
 }

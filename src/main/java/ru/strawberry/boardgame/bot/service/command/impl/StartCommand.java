@@ -1,13 +1,14 @@
 package ru.strawberry.boardgame.bot.service.command.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.strawberry.boardgame.exceptions.UserInputException;
 import ru.strawberry.boardgame.bot.service.command.Command;
 import ru.strawberry.boardgame.bot.service.command.CommandRequest;
-import ru.strawberry.boardgame.bot.service.redis.RedisService;
-import ru.strawberry.boardgame.bot.service.user.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.strawberry.boardgame.repository.redis.RedisService;
+import ru.strawberry.boardgame.repository.redis.RedisUserState;
+import ru.strawberry.boardgame.service.UserService;
 
 /**
  * Command for processing "/start" message.
@@ -20,8 +21,6 @@ public class StartCommand implements Command {
     private final UserService userService = UserService.getInstance();
     private final RedisService redisService = RedisService.getInstance();
 
-    private final List<String> inappropriateStates = new ArrayList<>();
-
     private final String originalCommand;
 
     public StartCommand(String originalCommand) {
@@ -29,39 +28,13 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public void process(CommandRequest command) {
+    public BotApiMethodMessage process(CommandRequest command) {
         // Check if user exists
         this.validate(command.getTgId());
         userService.registerUser(command.getTgId());
         // create if not otherwise return
-    }
 
-    private void validate(Long from) {
-        log.info("Start processing start command");
-        log.debug("Command text {}", this.originalCommand);
-        if (this.originalCommand == null || this.originalCommand.isBlank()) {
-            log.error("Incorrect input for start command! {}", this.originalCommand);
-            throw new IllegalArgumentException("Ввод команды не может быть пустым!");
-        }
-        String[] tokens = this.originalCommand.split(" ");
-        if (tokens.length != 1 || !tokens[0].equals("start")) {
-            log.error("Incorrect input for start command! {}", this.originalCommand);
-            throw new IllegalArgumentException("Неверный формат команды! Введите /start");
-        }
-
-        String state = redisService.checkIfExistsState(Long.toString(from));
-
-        if (state != null && inappropriateStates.contains(state)) {
-            log.error("Attempt to make inappropriate acton by {}! {}", from, this.originalCommand);
-            throw new IllegalArgumentException("Недостуное действие!");
-        }
-
-        redisService.putState(Long.toString(from), "TO_REGISTER");
-    }
-
-    @Override
-    public String getMessage() {
-        return """
+        String responseText = """
                 Привет! Бот поможет выбрать настольную игра для компании.
                 Как пользоваться?
                 В идеале, каждому (или почти) в компании потребуется телефон с Telegram.
@@ -76,5 +49,33 @@ public class StartCommand implements Command {
 
                 Стол считается активным на протяжении 12 часов. Стол можно закрыть принудительно командой /close
                 """;
+
+        return SendMessage.builder()
+                .chatId(command.getTgId())
+                .text(responseText)
+                .build();
+    }
+
+    private void validate(Long from) {
+        log.info("Start processing start command");
+        log.debug("Command text {}", this.originalCommand);
+        if (this.originalCommand == null || this.originalCommand.isBlank()) {
+            log.error("Incorrect input for start command! {}", this.originalCommand);
+            throw new UserInputException("Ввод команды не может быть пустым!");
+        }
+        String[] tokens = this.originalCommand.split(" ");
+        if (tokens.length != 1 || !tokens[0].equals("start")) {
+            log.error("Incorrect input for start command! {}", this.originalCommand);
+            throw new UserInputException("Неверный формат команды! Введите /start");
+        }
+
+        RedisUserState state = redisService.checkIfExistsState(from + "-STATE");
+
+        if (state != null) {
+            log.error("Attempt to make inappropriate acton by {}! {}", from, this.originalCommand);
+            throw new UserInputException("Недостуное действие!");
+        }
+
+        redisService.putState(from + "-STATE" , RedisUserState.TO_REGISTER);
     }
 }

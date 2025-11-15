@@ -1,5 +1,7 @@
 package ru.strawberry.boardgame.bot.service.command;
 
+import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
+
 /**
  * User input command.
  *
@@ -10,12 +12,6 @@ public interface Command {
     /**
      * Process command. This is asynchronous operation, user will get response after all actions
      */
-    void process(CommandRequest command);
+    BotApiMethodMessage process(CommandRequest command);
 
-    /**
-     * Message to return to user. Relies on current state, so message is intermediate.
-     *
-     * @return text to display to user
-     */
-    String getMessage();
 }

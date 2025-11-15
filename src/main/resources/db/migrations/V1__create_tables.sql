@@ -1,20 +1,13 @@
 create table ${current_schema}.users (
     id                bigint primary key generated always as identity,
     tg_id             int not null unique,
-    tesera_name       varchar(200)
+    tesera_name       varchar(200),
+    tesera_id         integer,
     unique(tg_id, tesera_name)
 );
 
-create table ${current_schema}.games (
-    id                    bigint primary key generated always as identity not null,
-    user_id               bigint references ${current_schema}.users(id) not null,
-    title                 varchar(200) not null,
-    rating_my             decimal(38, 2),
-    tesera_url            varchar(500) not null,
-    players_min           int,
-    players_max           int,
-    players_min_recommend int,
-    players_max_recommend int,
-    playtime_min          int,
-    playtime_max          int
-);
+comment on table ${current_schema}.users is 'Пользователи сервиса';
+comment on column ${current_schema}.users.id is 'Системный идентификатор пользователя';
+comment on column ${current_schema}.users.tg_id is 'Идентификатор пользователя в Telegram';
+comment on column ${current_schema}.users.tesera_name is 'Логин пользователя на Tesera';
+comment on column ${current_schema}.users.tesera_id is 'Идентификатор пользователя в Tesera';
