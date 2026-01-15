@@ -9,5 +9,5 @@ public interface GamesRepository {
 
     void addGames(List<TeseraGame> listGames, Long userTgId);
 
-    List<Games> getGames(Long tgId);
+    List<String> getGamesTitles(Long tgId);
 }

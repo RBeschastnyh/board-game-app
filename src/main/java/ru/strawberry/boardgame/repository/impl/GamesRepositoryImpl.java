@@ -46,32 +46,34 @@ public class GamesRepositoryImpl implements GamesRepository {
     }
 
     @Override
-    public List<Games> getGames(Long tgId) {
-        Transaction transaction = null;
-        try (Session session = SessionContextImpl.getInstance().getSession()) {
-            transaction = session.beginTransaction();
-            session.createNativeQuery("""
-                    with players_count as (
-                        select count(1) from Party p join Tabletop t on p.tableId = t.id
-                         join User u on p.userId = u.id
-                         where u.tgId = :id
-                    )
-                    select g from Games g join User u on g.userId = u.id
-                     where u.tgId = :id and (g.playersMin is null or g.playersMin >= players_count)
-                     and (g.playersMax is null or g.playersMax <= players_count)
-                     and g.isAddition = false
-                     limit 5
-                    """, Games.class)
-                    .setHint(QueryHints.READ_ONLY, true)
-                    .setParameter("id", tgId)
-                    .getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
-        return null;
+    public List<String> getGamesTitles(Long tgId) {
+
+        return List.of("new Games()", "b");
+//        Transaction transaction = null;
+//        try (Session session = SessionContextImpl.getInstance().getSession()) {
+//            transaction = session.beginTransaction();
+//            session.createNativeQuery("""
+//                    with players_count as (
+//                        select count(1) from Party p join Tabletop t on p.tableId = t.id
+//                         join User u on p.userId = u.id
+//                         where u.tgId = :id
+//                    )
+//                    select g from Games g join User u on g.userId = u.id
+//                     where u.tgId = :id and (g.playersMin is null or g.playersMin >= players_count)
+//                     and (g.playersMax is null or g.playersMax <= players_count)
+//                     and g.isAddition = false
+//                     limit 5
+//                    """, Games.class)
+//                    .setHint(QueryHints.READ_ONLY, true)
+//                    .setParameter("id", tgId)
+//                    .getResultList();
+//            transaction.commit();
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//        }
+//        return null;
     }
 
     private Games createFromTeseraGame(TeseraGame teseraGame) {

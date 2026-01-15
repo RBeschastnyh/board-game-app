@@ -1,3 +1,5 @@
+create schema if not exists ${current_schema};
+
 create table ${current_schema}.users (
     id                bigint primary key generated always as identity,
     tg_id             int not null unique,

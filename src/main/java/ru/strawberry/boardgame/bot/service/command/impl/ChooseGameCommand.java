@@ -26,10 +26,8 @@ public class ChooseGameCommand implements Command {
 
         Optional<Tabletop> tabletop = tabletopRepository.checkIfUserIsHost(tgId);
         if (tabletop.isPresent()) {
-            List<String> games = gamesRepository.getGames(tgId)
-                    .stream()
-                    .map(Games::getTitle)
-                    .toList();
+            List<String> games = gamesRepository.getGamesTitles(tgId);
+
             return SendPoll.builder()
                     .chatId(tgId)
                     .options(games)
