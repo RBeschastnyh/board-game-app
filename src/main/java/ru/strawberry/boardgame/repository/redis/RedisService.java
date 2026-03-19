@@ -1,11 +1,11 @@
 package ru.strawberry.boardgame.repository.redis;
 
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import lombok.extern.slf4j.Slf4j;
-import ru.strawberry.boardgame.bot.util.EnvVars;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Redis service.
@@ -13,23 +13,12 @@ import ru.strawberry.boardgame.bot.util.EnvVars;
  * @author RBeschastnykh
  */
 @Slf4j
+@Service
 public class RedisService {
 
-    private static RedisService redisService;
-    private RedisClient redisClient;
+    private final RedisClient redisClient;
 
-    public static synchronized RedisService getInstance() {
-        if (redisService == null) {
-            redisService = new RedisService(
-                    RedisClient.create(
-                            RedisURI.create(System.getenv(EnvVars.REDIS_DB.name()), 9005)
-                    )
-            );
-        }
-
-        return redisService;
-    }
-
+    @Autowired
     private RedisService(RedisClient redisClient) {
         this.redisClient = redisClient;
     }

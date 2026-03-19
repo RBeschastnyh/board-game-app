@@ -1,6 +1,10 @@
 package ru.strawberry.boardgame.bot.service.command.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.strawberry.boardgame.exceptions.UserInputException;
@@ -16,15 +20,19 @@ import ru.strawberry.boardgame.service.UserService;
  * @author RBeschastnykh
  */
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StartCommand implements Command {
 
-    private final UserService userService = UserService.getInstance();
-    private final RedisService redisService = RedisService.getInstance();
+    private final UserService userService;
+    private final RedisService redisService;
 
-    private final String originalCommand;
+//    private String originalCommand;
 
-    public StartCommand(String originalCommand) {
-        this.originalCommand = originalCommand;
+    @Autowired
+    public StartCommand(UserService userService, RedisService redisService) {
+        this.userService = userService;
+        this.redisService = redisService;
     }
 
     @Override
@@ -58,21 +66,21 @@ public class StartCommand implements Command {
 
     private void validate(Long from) {
         log.info("Start processing start command");
-        log.debug("Command text {}", this.originalCommand);
-        if (this.originalCommand == null || this.originalCommand.isBlank()) {
-            log.error("Incorrect input for start command! {}", this.originalCommand);
-            throw new UserInputException("Ввод команды не может быть пустым!");
-        }
-        String[] tokens = this.originalCommand.split(" ");
-        if (tokens.length != 1 || !tokens[0].equals("start")) {
-            log.error("Incorrect input for start command! {}", this.originalCommand);
-            throw new UserInputException("Неверный формат команды! Введите /start");
-        }
+//        log.debug("Command text {}", this.originalCommand);
+//        if (this.originalCommand == null || this.originalCommand.isBlank()) {
+//            log.error("Incorrect input for start command! {}", this.originalCommand);
+//            throw new UserInputException("Ввод команды не может быть пустым!");
+//        }
+//        String[] tokens = this.originalCommand.split(" ");
+//        if (tokens.length != 1 || !tokens[0].equals("start")) {
+//            log.error("Incorrect input for start command! {}", this.originalCommand);
+//            throw new UserInputException("Неверный формат команды! Введите /start");
+//        }
 
         RedisUserState state = redisService.checkIfExistsState(from + "-STATE");
 
         if (state != null) {
-            log.error("Attempt to make inappropriate acton by {}! {}", from, this.originalCommand);
+//            log.error("Attempt to make inappropriate acton by {}! {}", from, this.originalCommand);
             throw new UserInputException("Недостуное действие!");
         }
 

@@ -11,22 +11,26 @@ repositories {
 }
 
 ext {
-	telegramBotsVersion = "6.9.0"
-	jacksonVersion = "2.17.2"
+	telegramBotsVersion = "6.9.7.1"
+	jacksonVersion = "2.18.2"
 	redisVersion = "5.2.0"
 	hibernateVersion = "5.6.15.Final"
 	postgresqlVersion = "42.7.3"
+	springCoreVesion = "7.0.5"
+	lettuceCoreVesion = "6.3.2.RELEASE"
 }
 
 dependencies {
-	implementation "org.telegram:telegrambots:$telegramBotsVersion"
+	implementation "org.springframework:spring-core:$springCoreVesion"
+	implementation "org.springframework:spring-context:$springCoreVesion"
 	implementation "org.hibernate:hibernate-core:$hibernateVersion"
 	implementation "org.postgresql:postgresql:$postgresqlVersion"
 	implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 	implementation "redis.clients:jedis:$redisVersion"
 	implementation "org.slf4j:slf4j-api:2.0.16"
 	implementation "org.slf4j:slf4j-simple:2.0.16"
-	implementation "io.lettuce:lettuce-core:6.3.2.RELEASE"
+	implementation "org.telegram:telegrambots:$telegramBotsVersion"
+	implementation "io.lettuce:lettuce-core:$lettuceCoreVesion"
 
 	compileOnly "org.projectlombok:lombok:1.18.22"
 	annotationProcessor "org.projectlombok:lombok:1.18.22"

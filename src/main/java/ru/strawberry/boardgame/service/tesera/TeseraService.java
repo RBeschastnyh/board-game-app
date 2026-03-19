@@ -9,6 +9,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.strawberry.boardgame.bot.util.EnvVars;
 import ru.strawberry.boardgame.exceptions.FetchingUserInfoException;
 import ru.strawberry.boardgame.exceptions.TeseraServiceException;
@@ -26,8 +28,14 @@ import java.util.List;
  * @author RBeschastnykh
  */
 @Slf4j
+@Service
 public class TeseraService {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public TeseraService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public TeseraUser getUserByName(String username) {
         String teseraUrl = System.getenv(EnvVars.TESERA_URL.name());

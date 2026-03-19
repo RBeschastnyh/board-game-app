@@ -1,6 +1,10 @@
 package ru.strawberry.boardgame.bot.service.command.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.strawberry.boardgame.bot.service.command.Command;
@@ -9,12 +13,13 @@ import ru.strawberry.boardgame.repository.dto.Tabletop;
 import ru.strawberry.boardgame.repository.redis.RedisService;
 import ru.strawberry.boardgame.repository.redis.RedisUserState;
 import ru.strawberry.boardgame.repository.TabletopRepository;
-import ru.strawberry.boardgame.repository.impl.TabletopRepositoryImpl;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JoinTableCommand implements Command {
     private static final List<RedisUserState> GOOD_STATES = List.of(
             RedisUserState.TO_REGISTER,
@@ -23,8 +28,14 @@ public class JoinTableCommand implements Command {
             RedisUserState.JOINED_TABLE
     );
 
-    private final RedisService redisService = RedisService.getInstance();
-    private final TabletopRepository tabletopRepository = new TabletopRepositoryImpl();
+    private final RedisService redisService;
+    private final TabletopRepository tabletopRepository;
+
+    @Autowired
+    public JoinTableCommand(RedisService redisService, TabletopRepository tabletopRepository) {
+        this.redisService = redisService;
+        this.tabletopRepository = tabletopRepository;
+    }
 
     @Override
     public BotApiMethodMessage process(CommandRequest command) {

@@ -1,16 +1,16 @@
 package ru.strawberry.boardgame.bot.service.textprocessors.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.strawberry.boardgame.bot.service.command.CommandRequest;
-import ru.strawberry.boardgame.repository.dto.User;
 import ru.strawberry.boardgame.repository.GamesRepository;
-import ru.strawberry.boardgame.repository.impl.GamesRepositoryImpl;
+import ru.strawberry.boardgame.repository.dto.User;
 import ru.strawberry.boardgame.repository.redis.RedisService;
 import ru.strawberry.boardgame.repository.redis.RedisUserState;
 import ru.strawberry.boardgame.repository.UserRepository;
-import ru.strawberry.boardgame.repository.impl.UserRepositoryImpl;
 import ru.strawberry.boardgame.service.tesera.TeseraService;
 import ru.strawberry.boardgame.bot.service.textprocessors.TextProcessor;
 import ru.strawberry.boardgame.service.tesera.dto.TeseraGame;
@@ -24,12 +24,21 @@ import java.util.List;
  * @author RBeschastnykh
  */
 @Slf4j
+@Component
 public class RegTeseraUserTextProcessor implements TextProcessor {
 
-    private final TeseraService teseraService = new TeseraService();
-    private final RedisService redisService = RedisService.getInstance();
-    private final UserRepository userRepository = new UserRepositoryImpl();
-    private final GamesRepository gamesRepository = new GamesRepositoryImpl();
+    private final TeseraService teseraService;
+    private final RedisService redisService;
+    private final UserRepository userRepository;
+    private final GamesRepository gamesRepository;
+
+    @Autowired
+    public RegTeseraUserTextProcessor(TeseraService teseraService, RedisService redisService, UserRepository userRepository, GamesRepository gamesRepository) {
+        this.teseraService = teseraService;
+        this.redisService = redisService;
+        this.userRepository = userRepository;
+        this.gamesRepository = gamesRepository;
+    }
 
     @Override
     public BotApiMethodMessage process(CommandRequest request) {

@@ -1,5 +1,8 @@
 package ru.strawberry.boardgame.bot.service.textprocessors.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.strawberry.boardgame.bot.service.command.CommandRequest;
@@ -7,22 +10,29 @@ import ru.strawberry.boardgame.bot.service.textprocessors.TextProcessor;
 import ru.strawberry.boardgame.repository.dto.Tabletop;
 import ru.strawberry.boardgame.repository.dto.User;
 import ru.strawberry.boardgame.repository.PartyRepository;
-import ru.strawberry.boardgame.repository.impl.PartyRepositoryImpl;
 import ru.strawberry.boardgame.repository.redis.RedisService;
 import ru.strawberry.boardgame.repository.redis.RedisUserState;
 import ru.strawberry.boardgame.repository.TabletopRepository;
-import ru.strawberry.boardgame.repository.impl.TabletopRepositoryImpl;
 import ru.strawberry.boardgame.repository.UserRepository;
-import ru.strawberry.boardgame.repository.impl.UserRepositoryImpl;
 
 import java.util.Optional;
 
+@Slf4j
+@Component
 public class JoinTableTextProcessor implements TextProcessor {
 
-    private final RedisService redisService = RedisService.getInstance();
-    private final TabletopRepository tabletopRepository = new TabletopRepositoryImpl();
-    private final PartyRepository partyRepository = new PartyRepositoryImpl();
-    private final UserRepository userRepository = new UserRepositoryImpl();
+    private final RedisService redisService;
+    private final TabletopRepository tabletopRepository;
+    private final PartyRepository partyRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public JoinTableTextProcessor(RedisService redisService, TabletopRepository tabletopRepository, PartyRepository partyRepository, UserRepository userRepository) {
+        this.redisService = redisService;
+        this.tabletopRepository = tabletopRepository;
+        this.partyRepository = partyRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public BotApiMethodMessage process(CommandRequest request) {

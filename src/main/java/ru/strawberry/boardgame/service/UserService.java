@@ -1,31 +1,21 @@
 package ru.strawberry.boardgame.service;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.strawberry.boardgame.repository.UserRepository;
-import ru.strawberry.boardgame.repository.impl.UserRepositoryImpl;
 
 import javax.transaction.Transactional;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Service
 public class UserService {
 
-    private static UserService userService;
+    private final UserRepository userRepository;
 
-    private UserRepository userRepository;
-
-    public static synchronized UserService getInstance() {
-        if (userService == null) {
-            userService = new UserService(
-                    new UserRepositoryImpl()
-            );
-        }
-
-        return userService;
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Transactional

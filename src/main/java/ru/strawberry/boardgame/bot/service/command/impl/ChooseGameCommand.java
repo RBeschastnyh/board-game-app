@@ -1,5 +1,10 @@
 package ru.strawberry.boardgame.bot.service.command.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,18 +12,24 @@ import ru.strawberry.boardgame.bot.service.command.Command;
 import ru.strawberry.boardgame.bot.service.command.CommandRequest;
 import ru.strawberry.boardgame.repository.GamesRepository;
 import ru.strawberry.boardgame.repository.TabletopRepository;
-import ru.strawberry.boardgame.repository.dto.Games;
 import ru.strawberry.boardgame.repository.dto.Tabletop;
-import ru.strawberry.boardgame.repository.impl.GamesRepositoryImpl;
-import ru.strawberry.boardgame.repository.impl.TabletopRepositoryImpl;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ChooseGameCommand implements Command {
 
-    private final TabletopRepository tabletopRepository = new TabletopRepositoryImpl();
-    private final GamesRepository gamesRepository = new GamesRepositoryImpl();
+    private final TabletopRepository tabletopRepository;
+    private final GamesRepository gamesRepository;
+
+    @Autowired
+    public ChooseGameCommand(TabletopRepository tabletopRepository, GamesRepository gamesRepository) {
+        this.gamesRepository = gamesRepository;
+        this.tabletopRepository = tabletopRepository;
+    }
 
     @Override
     public BotApiMethodMessage process(CommandRequest command) {

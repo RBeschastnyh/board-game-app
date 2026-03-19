@@ -1,6 +1,10 @@
 package ru.strawberry.boardgame.bot.service.command.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.strawberry.boardgame.exceptions.InvalidActionException;
@@ -13,10 +17,12 @@ import ru.strawberry.boardgame.service.UserService;
 import java.util.List;
 
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RegisterTeseraUserCommand implements Command {
 
-    private final UserService userService = UserService.getInstance();
-    private final RedisService redisService = RedisService.getInstance();
+    private final UserService userService;
+    private final RedisService redisService;
 
     private final List<RedisUserState> inappropriateStates = List.of(
             RedisUserState.REGISTRATION_IN_PROCESS,
@@ -24,6 +30,12 @@ public class RegisterTeseraUserCommand implements Command {
             RedisUserState.JOINING_TABLE,
             RedisUserState.JOINED_TABLE
     );
+
+    @Autowired
+    public RegisterTeseraUserCommand(UserService userService, RedisService redisService) {
+        this.userService = userService;
+        this.redisService = redisService;
+    }
 
     @Override
     public BotApiMethodMessage process(CommandRequest command) {

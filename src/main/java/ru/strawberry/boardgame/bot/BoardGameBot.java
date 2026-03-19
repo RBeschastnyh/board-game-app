@@ -1,6 +1,9 @@
 package ru.strawberry.boardgame.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethodMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,15 +21,19 @@ import ru.strawberry.boardgame.bot.service.textprocessors.PlainTextProcessor;
  * @author RBeschastnykh
  */
 @Slf4j
+@Component
 public class BoardGameBot extends TelegramLongPollingBot {
 
     private final CommandProcessor commandProcessor;
     private final PlainTextProcessor plainTextProcessor;
 
-    public BoardGameBot(String token) {
+    @Autowired
+    public BoardGameBot(@Value("${bot.token}") String token,
+                        CommandProcessor commandProcessor,
+                        PlainTextProcessor plainTextProcessor) {
         super(token);
-        this.commandProcessor = new CommandProcessor();
-        this.plainTextProcessor = new PlainTextProcessor();
+        this.commandProcessor = commandProcessor;
+        this.plainTextProcessor = plainTextProcessor;
     }
 
     @Override
