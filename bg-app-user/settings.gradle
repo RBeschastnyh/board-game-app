@@ -1,0 +1,5 @@
+rootProject.name = 'bg-app-user'
+include 'board-game-app-tg-unit'
+include 'board-game-app-web-unit'
+include 'board-game-app-core'
+include 'board-game-app-db-unit'
