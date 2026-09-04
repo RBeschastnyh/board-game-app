@@ -1,4 +1,4 @@
-import 'package:bg_app_ui/board/create_board.dart';
+import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
 class BgAppFloatingActionButton extends StatefulWidget {
@@ -15,12 +15,7 @@ class _BgAppFloatingActionButtonState extends State<BgAppFloatingActionButton> {
     return FloatingActionButton(
           onPressed: () {
             print("Создание стола");
-            Navigator.push(
-              context, 
-              MaterialPageRoute<void>(
-                builder: (context) => BgAppCreateBoard(),
-              )
-            );
+            Navigator.pushNamed(context, AppRoutes.tableMenu);
           },
           foregroundColor: Colors.black,
           backgroundColor: Colors.amberAccent,

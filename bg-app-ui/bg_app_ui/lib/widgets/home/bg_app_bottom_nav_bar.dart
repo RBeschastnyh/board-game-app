@@ -1,4 +1,4 @@
-import 'package:bg_app_ui/board/invite_page.dart';
+import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
 typedef OneArgVoidFunction = void Function(BuildContext build);
@@ -18,10 +18,7 @@ class _BgAppBottomNavigationBar extends State<BgAppBottomNavigationBar> {
       onTap: (index) {
         switch (index) {
           case 2:
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(builder: (context) => InviteFriendPage()),
-            );
+            Navigator.pushNamed(context, AppRoutes.invite);
           default: print("Выбрано что-то в менюшке снизу");
         }
       },

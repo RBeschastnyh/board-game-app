@@ -1,3 +1,4 @@
+import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
 class BgAppCreateBoard extends StatefulWidget {
@@ -18,9 +19,10 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
         ),
       ),
       body: Center(
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Spacer(),
             Container(
               decoration: BoxDecoration(
                 color: Colors.amberAccent,
@@ -29,12 +31,16 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
               child: IconButton(
                 onPressed: () {
                   print("Создать стол");
+                  Navigator.pushNamed(context, AppRoutes.createTable);
                 },
                 icon: Icon(Icons.table_restaurant_sharp),
                 tooltip: "Создать новый стол",
                 iconSize: 130.0,
               ),
             ),
+            SizedBox(height: 20.0),
+            Text("Создать стол"),
+            Spacer(),
             Container(
               decoration: BoxDecoration(
                 color: Colors.amberAccent,
@@ -43,12 +49,16 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
               child: IconButton(
                 onPressed: () {
                   print("Присоединиться");
+                  Navigator.pushNamed(context, AppRoutes.joinTable);
                 },
                 icon: Icon(Icons.hail_rounded),
                 tooltip: "Присоединиться к столу",
                 iconSize: 130.0,
               ),
             ),
+            SizedBox(height: 20.0),
+            Text("Присоединиться"),
+            Spacer(),
           ],
         ),
       ),

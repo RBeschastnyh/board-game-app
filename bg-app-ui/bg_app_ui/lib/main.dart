@@ -1,4 +1,9 @@
-import 'package:bg_app_ui/home/home_page.dart';
+import 'package:bg_app_ui/widgets/board/create_board.dart';
+import 'package:bg_app_ui/widgets/board/invite_page.dart';
+import 'package:bg_app_ui/widgets/commons/types.dart';
+import 'package:bg_app_ui/widgets/home/home_page.dart';
+import 'package:bg_app_ui/widgets/table/create_table_page.dart';
+import 'package:bg_app_ui/widgets/table/join_table_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,10 +21,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/',
-      // home: const HomePage(),
+      initialRoute: AppRoutes.home,
       routes: {
-        '/': (context) => const HomePage(),
+        AppRoutes.home: (context) => const HomePage(),
+        AppRoutes.invite: (context) => const InviteFriendPage(),
+        AppRoutes.tableMenu: (context) => const BgAppCreateBoard(),
+        AppRoutes.createTable: (context) => const CreateTablePage(),
+        AppRoutes.joinTable: (context) => const JoinTablePage(),
       },
     );
   }

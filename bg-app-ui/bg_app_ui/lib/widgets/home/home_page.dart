@@ -1,6 +1,6 @@
-import 'package:bg_app_ui/home/bg_app_bottom_nav_bar.dart';
-import 'package:bg_app_ui/home/bg_app_drawer.dart';
-import 'package:bg_app_ui/home/bg_app_fab.dart';
+import 'package:bg_app_ui/widgets/home/bg_app_bottom_nav_bar.dart';
+import 'package:bg_app_ui/widgets/home/bg_app_drawer.dart';
+import 'package:bg_app_ui/widgets/home/bg_app_fab.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

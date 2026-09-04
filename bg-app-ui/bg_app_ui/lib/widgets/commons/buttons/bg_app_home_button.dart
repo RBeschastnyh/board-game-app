@@ -1,3 +1,4 @@
+import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
 class BgAppHomeButton extends StatefulWidget {
@@ -12,7 +13,7 @@ class _BgAppHomeButton extends State<BgAppHomeButton> {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).popUntil(ModalRoute.withName('/'));
+          Navigator.of(context).popUntil(ModalRoute.withName(AppRoutes.home));
         },
         backgroundColor: Colors.amberAccent,
         child: Icon(
