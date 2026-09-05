@@ -1,3 +1,4 @@
+import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
 class BgAppDrawer extends StatefulWidget {
@@ -25,7 +26,7 @@ class _BgAppDrawer extends State<BgAppDrawer> {
                 title: Text("Загрузить с Tesera"),
                 onTap: () {
                   print("Загрузить с Tesera");
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRoutes.regTesera);
                 },
               ),
               ListTile(

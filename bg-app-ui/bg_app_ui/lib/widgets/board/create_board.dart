@@ -13,10 +13,7 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: BackButton(),
       ),
       body: Center(
         child: Column(

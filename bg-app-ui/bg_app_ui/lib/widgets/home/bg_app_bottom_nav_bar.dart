@@ -17,6 +17,8 @@ class _BgAppBottomNavigationBar extends State<BgAppBottomNavigationBar> {
       backgroundColor: Colors.amberAccent,
       onTap: (index) {
         switch (index) {
+          case 1:
+            Navigator.pushNamed(context, AppRoutes.gamesList);
           case 2:
             Navigator.pushNamed(context, AppRoutes.invite);
           default: print("Выбрано что-то в менюшке снизу");

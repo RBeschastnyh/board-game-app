@@ -56,12 +56,7 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-        ),
+        leading: BackButton(),
       ),
       body: Center(
         child: Column(

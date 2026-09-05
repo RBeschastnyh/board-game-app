@@ -14,22 +14,44 @@ class _JoinTablePageState extends State<JoinTablePage> {
   late FocusNode _tableCodeFocus;
   late FocusAttachment _tableCodeFocusAttachment;
 
-  void _handleTableFocusChanged() {
+  bool _validTableCode = false;
+  late String _currentText;
 
+  void _handleTableFocusChanged() {
+    _validTableCode = RegExp(r'[0-9A-Z]{5}').hasMatch(_tableCodeController.text);
   }
 
   void _handleTableCodeTextChanged() {
-    String currentText = _tableCodeController.value.text;
+    _currentText = _tableCodeController.value.text;
 
-    print(currentText);
-    
+    print(_currentText);
+
     _tableCodeController.value = _tableCodeController.value.copyWith(
-      text: currentText.length > 5 ? currentText.toUpperCase().substring(0, 5) : currentText.toUpperCase(),
+      text: _formatTableCode(_currentText),
+      selection: TextSelection(
+        baseOffset: _tableCodeController.value.text.length,
+        extentOffset: _tableCodeController.value.text.length % 6,
+      ),
     );
+  }
+
+  String _formatTableCode(String currentText) {
+    if (currentText.isEmpty) {
+      return currentText;
+    }
+
+    if (RegExp(r'[a-zA-Z0-9]').hasMatch(currentText.characters.last)) {
+      return currentText.length > 5
+          ? currentText.toUpperCase().substring(0, 5)
+          : currentText.toUpperCase();
+    }
+
+    return currentText.characters.skipLast(1).toString();
   }
 
   @override
   void initState() {
+    _currentText = "";
     _tableCodeFocus = FocusNode(debugLabel: "_tableCodeFocus");
     _tableCodeFocus.addListener(_handleTableFocusChanged);
 
@@ -46,10 +68,7 @@ class _JoinTablePageState extends State<JoinTablePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-        ),
+        leading: BackButton(),
       ),
       body: Center(
         child: Column(
@@ -62,6 +81,7 @@ class _JoinTablePageState extends State<JoinTablePage> {
                 focusNode: _tableCodeFocus,
                 decoration: InputDecoration(
                   hint: Text("Введите код стола"),
+                  errorText: _currentText.isEmpty || _currentText.isNotEmpty && _validTableCode ? null : "Некорректный код",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     // borderSide: BorderSide(
@@ -69,20 +89,20 @@ class _JoinTablePageState extends State<JoinTablePage> {
                     //   color: Colors.amberAccent,
                     //   width: 10.0
                     // )
-                  )
+                  ),
                 ),
               ),
             ),
             Spacer(),
             TextButton(
-              onPressed: () {
+              onPressed: _validTableCode ? () {
                 print("присоединяюсь к игре");
-              }, 
+              } : null,
               style: TextButton.styleFrom(
                 backgroundColor: Colors.amberAccent,
-                foregroundColor: Colors.black,
+                foregroundColor: Colors.black
               ),
-              child: Text("Присоедититься")
+              child: Text("Присоедититься"),
             ),
             Spacer(),
           ],

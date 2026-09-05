@@ -36,10 +36,7 @@ class _CreateTablePageState extends State<CreateTablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-        ),
+        leading: BackButton(),
       ),
       body: Center(
         child: Column(

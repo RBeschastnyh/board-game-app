@@ -4,8 +4,8 @@ class AppRoutes {
   static final String joinTable = "/joinTable";
   static final String invite = "/invite";
   static final String tableMenu = "/tableMenu";
-  // String home = "/";
-  // String home = "/";
+  static final String gamesList = "/gamesList";
+  static final String regTesera = "/regTesera";
   // String home = "/";
   // String home = "/";
 }
