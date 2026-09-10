@@ -9,7 +9,22 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    springBootVersion = "4.1.0"
+    hibernateVersion = "5.6.15.Final"
+    postgresqlVersion = "42.7.3"
+    springSecurityCryptoVersion = "7.1.0"
+    jacksonVersion = "2.18.2"
+}
+
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    implementation "org.springframework.security:spring-security-crypto:$springSecurityCryptoVersion"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
+    implementation "org.hibernate:hibernate-core:$hibernateVersion"
+    implementation "org.postgresql:postgresql:$postgresqlVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

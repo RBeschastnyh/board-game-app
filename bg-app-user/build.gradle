@@ -1,6 +1,20 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	ext {
+		flywaydbPostgresPlugin = "13.4.0"
+	}
+
+	dependencies {
+		classpath "org.flywaydb:flyway-database-postgresql:$flywaydbPostgresPlugin"
+	}
+}
+
 plugins {
     id "java"
-	id "org.flywaydb.flyway" version "9.0.4"
+	id "org.flywaydb.flyway" version "13.4.0"
 }
 
 group = 'ru.strawberry'
@@ -12,29 +26,22 @@ repositories {
 
 ext {
 	telegramBotsVersion = "6.9.7.1"
-	jacksonVersion = "2.18.2"
 	redisVersion = "5.2.0"
-	hibernateVersion = "5.6.15.Final"
-	postgresqlVersion = "42.7.3"
 	springCoreVesion = "7.0.5"
-	springBootVesion = "4.0.5"
+	slf4Version = "2.0.16"
+	lombokVersion = "1.18.38"
 }
 
 dependencies {
 //	implementation "org.springframework:spring-core:$springCoreVesion"
 //	implementation "org.springframework:spring-context:$springCoreVesion"
-	implementation "org.springframework.boot:spring-boot:$springBootVesion"
-	implementation "org.hibernate:hibernate-core:$hibernateVersion"
-	implementation "org.postgresql:postgresql:$postgresqlVersion"
-	implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+	implementation project(":board-game-app-web-unit")
 	implementation "redis.clients:jedis:$redisVersion"
-	implementation "org.slf4j:slf4j-api:2.0.16"
-	implementation "org.slf4j:slf4j-simple:2.0.16"
 	implementation "org.telegram:telegrambots:$telegramBotsVersion"
 
 
-	compileOnly "org.projectlombok:lombok:1.18.22"
-	annotationProcessor "org.projectlombok:lombok:1.18.22"
+	compileOnly "org.projectlombok:lombok:$lombokVersion"
+	annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
 flyway {
@@ -45,7 +52,7 @@ flyway {
 	placeholders = ["current_schema": "${System.env.FLYWAY_CURRENT_SCHEMA}"]
 }
 
-apply from: "flyway/dev-flyway.gradle"
+apply from: "flyway/settings-flyway.gradle"
 
 jar {
 	manifest {
@@ -55,5 +62,20 @@ jar {
 
 	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+subprojects {
+
+	apply plugin: 'java'
+
+	dependencies {
+		// Main source set
+		compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+//		implementation "org.slf4j:slf4j-api:$slf4Version"
+//		implementation "org.slf4j:slf4j-simple:$slf4Version"
+
+		annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 	}
 }

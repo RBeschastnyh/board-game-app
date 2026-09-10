@@ -1,9 +1,0 @@
-project.ext['flyway.driver'] = 'org.postgresql.Driver'
-project.ext['flyway.url'] = ''
-project.ext['flyway.user'] = ''
-project.ext['flyway.password'] = ''
-project.ext['flyway.schemas'] = ''
-project.ext['flyway.placeholders.current_schema'] = ''
-project.ext['flyway.outOfOrder'] = true
-project.ext['flyway.cleanDisabled'] = false
-project.ext['flyway.locations'] = ""

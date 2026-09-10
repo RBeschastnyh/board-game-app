@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    postgres:
+      jdbcUrl: ${postgres_url}
+      schema: ${postgres_board_game_schema}
+      username: ${postgres_board_game_username}
+      password: ${postgres_board_game_password}
+      driver-class-name: org.postgresql.Driver
