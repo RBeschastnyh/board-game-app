@@ -1,4 +1,5 @@
 import 'package:bg_app_ui/widgets/commons/buttons/bg_app_home_button.dart';
+import 'package:bg_app_ui/widgets/commons/buttons/default_text_button.dart';
 import 'package:flutter/material.dart';
 
 class JoinTablePage extends StatefulWidget {
@@ -23,8 +24,6 @@ class _JoinTablePageState extends State<JoinTablePage> {
 
   void _handleTableCodeTextChanged() {
     _currentText = _tableCodeController.value.text;
-
-    print(_currentText);
 
     _tableCodeController.value = _tableCodeController.value.copyWith(
       text: _formatTableCode(_currentText),
@@ -94,15 +93,11 @@ class _JoinTablePageState extends State<JoinTablePage> {
               ),
             ),
             Spacer(),
-            TextButton(
-              onPressed: _validTableCode ? () {
+            DefaultTextButton(
+              text: "Присоедититься",
+              callback: _validTableCode ? () {
                 print("присоединяюсь к игре");
               } : null,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.amberAccent,
-                foregroundColor: Colors.black
-              ),
-              child: Text("Присоедититься"),
             ),
             Spacer(),
           ],

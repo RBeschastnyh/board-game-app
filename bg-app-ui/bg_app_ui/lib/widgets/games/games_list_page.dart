@@ -1,4 +1,4 @@
-import 'package:bg_app_ui/models/games.dart';
+import 'package:bg_app_ui/model/games.dart';
 import 'package:bg_app_ui/widgets/commons/buttons/bg_app_home_button.dart';
 import 'package:flutter/material.dart';
 

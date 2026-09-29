@@ -1,3 +1,5 @@
+import 'package:bg_app_ui/di/dependencies.dart';
+import 'package:bg_app_ui/model/tesera/tesera_service.dart';
 import 'package:bg_app_ui/widgets/board/create_board.dart';
 import 'package:bg_app_ui/widgets/board/invite_page.dart';
 import 'package:bg_app_ui/widgets/board/reg_tesera_page.dart';
@@ -7,9 +9,15 @@ import 'package:bg_app_ui/widgets/home/home_page.dart';
 import 'package:bg_app_ui/widgets/table/create_table_page.dart';
 import 'package:bg_app_ui/widgets/table/join_table_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: buildDependencies(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +39,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.createTable: (context) => const CreateTablePage(),
         AppRoutes.joinTable: (context) => const JoinTablePage(),
         AppRoutes.gamesList: (context) => const GamesListPage(),
-        AppRoutes.regTesera: (context) => const RegTeseraUserPage()
+        AppRoutes.regTesera: (context) => RegTeseraUserPage(teseraService: context.read<TeseraService>())
       },
     );
   }

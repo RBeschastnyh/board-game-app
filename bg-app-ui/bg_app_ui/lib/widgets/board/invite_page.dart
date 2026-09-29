@@ -1,3 +1,5 @@
+import 'package:bg_app_ui/widgets/commons/buttons/default_cancel_text_button.dart';
+import 'package:bg_app_ui/widgets/commons/buttons/default_text_button.dart';
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
 
@@ -27,13 +29,34 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
     }
 
     if (!_emailFocused) {
-      _validEmail = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(_textController.text);
+      _validEmail = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+      ).hasMatch(_textController.text);
     }
   }
 
-  void _sendEmailInvireAndReturn() {
-    print("отправляю приглашение!");
-    Navigator.of(context).popUntil(ModalRoute.withName(AppRoutes.home));
+  Future<String?> _sendEmailInvireAndReturn() async {
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Предупреждение"),
+        content: Text(
+          "Убедитесь, что адрес указан правильно. Если вы указали какую-то галиматью или планируете устроить спам, то разлогитньтесь и валите нахер, мы постараемся забанить Вас как можно скорее",
+        ),
+        actions: <Widget>[
+          DefaultTextButton(
+            text: "Понятно",
+            callback: () {
+              print("отправляю приглашение!");
+              Navigator.of(
+                context,
+              ).popUntil(ModalRoute.withName(AppRoutes.home));
+            },
+          ),
+          DefaultCancelTextButton(text: "Понял(а)")
+        ],
+      ),
+    );
   }
 
   @override
@@ -45,9 +68,7 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
     _emailFocusNode = FocusNode(debugLabel: "email focus node");
     _emailFocusNode.addListener(_handleEmailFocusChanged);
 
-    _focusAttachment = _emailFocusNode.attach(
-      context
-    );
+    _focusAttachment = _emailFocusNode.attach(context);
   }
 
   @override
@@ -55,9 +76,7 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
     _focusAttachment.reparent();
 
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(),
-      ),
+      appBar: AppBar(leading: BackButton()),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -79,18 +98,16 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
-                  errorText: _textController.text.isNotEmpty && !_validEmail ? "Некорректный адрес" : null,
+                  errorText: _textController.text.isNotEmpty && !_validEmail
+                      ? "Некорректный адрес"
+                      : null,
                 ),
               ),
             ),
             Spacer(),
-            TextButton(
-              onPressed: _validEmail ? _sendEmailInvireAndReturn : null,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.amberAccent,
-                foregroundColor: Colors.black,
-              ),
-              child: Text("Пригласить!"),
+            DefaultTextButton(
+              text: "Пригласить!",
+              callback: _validEmail ? _sendEmailInvireAndReturn : null,
             ),
             Spacer(),
           ],
