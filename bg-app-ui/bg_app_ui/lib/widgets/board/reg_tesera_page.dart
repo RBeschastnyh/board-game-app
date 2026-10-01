@@ -6,6 +6,7 @@ import 'package:bg_app_ui/widgets/commons/buttons/default_cancel_text_button.dar
 import 'package:bg_app_ui/widgets/commons/buttons/default_text_button.dart';
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class RegTeseraUserPage extends StatefulWidget {
   const RegTeseraUserPage({super.key, required TeseraService teseraService})
@@ -20,6 +21,8 @@ class RegTeseraUserPage extends StatefulWidget {
 class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
   final TextEditingController _teseraUsenameController =
       TextEditingController();
+
+  final Logger logger = Logger('RegTeseraUserPage');
 
   late FocusNode _teseraUsernameFocusNode;
   late FocusAttachment _teseraUsernameFocusAttachment;
@@ -39,15 +42,12 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
             ? 40
             : _teseraUsenameController.text.length,
       ),
-      selection: TextSelection(
-        baseOffset: _teseraUsenameController.value.text.length,
-        extentOffset: _teseraUsenameController.value.text.length % 40,
-      ),
     );
   }
 
   void _successCallback(TeseraUser user) {
-    print("Найден ${user.username}");
+    logger.info("Найден ${user.username}");
+
     _currentUser = user;
     setState(() {
       _isErrorOnUsernameInput = false;
@@ -71,7 +71,8 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
               },
             );
       } catch (e) {
-        print("${e.toString()}");
+        logger.shout("Error occurred while retrieving tesera user", e);
+
         setState(() {
           _isErrorOnUsernameInput = true;
         });
@@ -91,7 +92,8 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
           DefaultTextButton(
             text: "Ок",
             callback: () {
-              print("Сохраняем пользователя ${_currentUser.username}");
+              logger.info("Сохраняем пользователя ${_currentUser.username}");
+              
               Navigator.of(
                 context,
               ).popUntil(ModalRoute.withName(AppRoutes.home));
@@ -130,6 +132,7 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
               child: TextField(
                 controller: _teseraUsenameController,
                 focusNode: _teseraUsernameFocusNode,
+                enableInteractiveSelection: true,
                 decoration: InputDecoration(
                   hint: Text("Введите имя пользователя Tesera"),
                   hintStyle: TextStyle(color: Colors.grey),

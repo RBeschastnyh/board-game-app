@@ -1,6 +1,7 @@
 import 'package:bg_app_ui/model/games.dart';
 import 'package:bg_app_ui/widgets/commons/buttons/bg_app_home_button.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class GamesListPage extends StatefulWidget {
   const GamesListPage({super.key});
@@ -11,6 +12,8 @@ class GamesListPage extends StatefulWidget {
 
 class _GamesListPageState extends State<GamesListPage> {
   // List<Games> _games = [];
+
+  final Logger logger = Logger('GamesListPage');
 
   List<Games> _games = [
     Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
@@ -43,7 +46,7 @@ class _GamesListPageState extends State<GamesListPage> {
       itemBuilder: (context, index) {
         return ListTile(
           shape: BoxBorder.fromLTRB(top: BorderSide(color: Colors.black, style: BorderStyle.solid)),
-          onLongPress: () => print("Меня долго зажали"),
+          onLongPress: () => logger.fine("Меня долго зажали"),
           leading: Image.asset(
             "assets/images/noun_Meeple_128.png",
             width: 128.0,
@@ -66,7 +69,7 @@ class _GamesListPageState extends State<GamesListPage> {
                           ],
                         ),
                         TextButton(
-                          onPressed: () => print("Жмяк"),
+                          onPressed: () => logger.fine("Жмяк"),
                           child: Text("Придумать"),
                         ),
                       ],

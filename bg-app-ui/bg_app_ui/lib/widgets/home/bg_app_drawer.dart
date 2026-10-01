@@ -1,5 +1,6 @@
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class BgAppDrawer extends StatefulWidget {
   const BgAppDrawer({super.key});
@@ -9,6 +10,7 @@ class BgAppDrawer extends StatefulWidget {
 }
 
 class _BgAppDrawer extends State<BgAppDrawer> {
+  final Logger logger = Logger('BgAppDrawer');
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +27,14 @@ class _BgAppDrawer extends State<BgAppDrawer> {
               ListTile(
                 title: Text("Загрузить с Tesera"),
                 onTap: () {
-                  print("Загрузить с Tesera");
+                  logger.fine("Загрузить с Tesera");
                   Navigator.pushNamed(context, AppRoutes.regTesera);
                 },
               ),
               ListTile(
                 title: Text("Мои столы"),
                 onTap: () {
-                  print("Мои столы");
+                  logger.fine("Мои столы");
                   Navigator.pop(context);
                 },
               )

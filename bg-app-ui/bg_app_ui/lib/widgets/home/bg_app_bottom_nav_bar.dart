@@ -1,5 +1,6 @@
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 typedef OneArgVoidFunction = void Function(BuildContext build);
 
@@ -11,6 +12,9 @@ class BgAppBottomNavigationBar extends StatefulWidget {
 }
 
 class _BgAppBottomNavigationBar extends State<BgAppBottomNavigationBar> {
+
+  final Logger logger = Logger('BgAppBottomNavigationBar');
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -21,7 +25,7 @@ class _BgAppBottomNavigationBar extends State<BgAppBottomNavigationBar> {
             Navigator.pushNamed(context, AppRoutes.gamesList);
           case 2:
             Navigator.pushNamed(context, AppRoutes.invite);
-          default: print("Выбрано что-то в менюшке снизу");
+          default: logger.fine("Выбрано что-то в менюшке снизу");
         }
       },
       items: const <BottomNavigationBarItem>[

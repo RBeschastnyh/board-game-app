@@ -1,5 +1,6 @@
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class BgAppCreateBoard extends StatefulWidget {
   const BgAppCreateBoard({super.key});
@@ -11,6 +12,8 @@ class BgAppCreateBoard extends StatefulWidget {
 class _BgAppCreateBoard extends State<BgAppCreateBoard> {
   @override
   Widget build(BuildContext context) {
+    var logger = Logger(runtimeType.toString());
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -27,7 +30,7 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
               ),
               child: IconButton(
                 onPressed: () {
-                  print("Создать стол");
+                  logger.info("Создать стол");
                   Navigator.pushNamed(context, AppRoutes.createTable);
                 },
                 icon: Icon(Icons.table_restaurant_sharp),
@@ -45,7 +48,7 @@ class _BgAppCreateBoard extends State<BgAppCreateBoard> {
               ),
               child: IconButton(
                 onPressed: () {
-                  print("Присоединиться");
+                  logger.info("Присоединиться");
                   Navigator.pushNamed(context, AppRoutes.joinTable);
                 },
                 icon: Icon(Icons.hail_rounded),

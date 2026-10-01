@@ -1,6 +1,7 @@
 import 'package:bg_app_ui/widgets/commons/buttons/bg_app_home_button.dart';
 import 'package:bg_app_ui/widgets/commons/buttons/default_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class JoinTablePage extends StatefulWidget {
   const JoinTablePage({super.key});
@@ -11,6 +12,7 @@ class JoinTablePage extends StatefulWidget {
 
 class _JoinTablePageState extends State<JoinTablePage> {
   final TextEditingController _tableCodeController = TextEditingController();
+  final Logger logger = Logger('JoinTablePage');
 
   late FocusNode _tableCodeFocus;
   late FocusAttachment _tableCodeFocusAttachment;
@@ -96,7 +98,7 @@ class _JoinTablePageState extends State<JoinTablePage> {
             DefaultTextButton(
               text: "Присоедититься",
               callback: _validTableCode ? () {
-                print("присоединяюсь к игре");
+                logger.info("присоединяюсь к игре");
               } : null,
             ),
             Spacer(),

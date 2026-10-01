@@ -1,5 +1,6 @@
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class BgAppFloatingActionButton extends StatefulWidget {
   const BgAppFloatingActionButton({super.key});
@@ -10,11 +11,13 @@ class BgAppFloatingActionButton extends StatefulWidget {
 
 class _BgAppFloatingActionButtonState extends State<BgAppFloatingActionButton> {
 
+  final Logger logger = Logger('BgAppFloatingActionButton');
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
           onPressed: () {
-            print("Создание стола");
+            logger.info("Создание стола");
             Navigator.pushNamed(context, AppRoutes.tableMenu);
           },
           foregroundColor: Colors.black,

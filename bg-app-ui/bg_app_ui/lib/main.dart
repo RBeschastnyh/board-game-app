@@ -1,3 +1,5 @@
+import 'package:bg_app_ui/cache/internal_cache.dart';
+import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/di/dependencies.dart';
 import 'package:bg_app_ui/model/tesera/tesera_service.dart';
 import 'package:bg_app_ui/widgets/board/create_board.dart';
@@ -12,9 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  var config = AppConfig.fromConfigFile();
+  AppCache appCache = AppCache();
+
   runApp(
     MultiProvider(
-      providers: buildDependencies(),
+      providers: buildDependencies(config, appCache),
       child: const MyApp(),
     )
   );

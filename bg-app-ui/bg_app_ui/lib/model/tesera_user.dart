@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
+
 class TeseraUser {
 
   final String _username;
@@ -20,10 +22,12 @@ class TeseraUser {
   }) : _teseraId = teseraId, _username = username, _gamesInCollection = gamesInCollection, _possibleName = possibleName;
 
   factory TeseraUser.fromJson(Map<String, dynamic> json) {
+    var logger = Logger('TeseraUser');
+    
     var {'user': { 'teseraId': int? teseraId, 'login': String? login, 'name': String? possibleName }, 'gamesInCollection': int? gamesCount} = json;
 
     if (login == null || teseraId == null) {
-      print("Error occurred, unprocessable json $jsonEncode($json)");
+      logger.severe("Error occurred, unprocessable json $jsonEncode($json)");
       throw FormatException("Ошибка при попытке получить пользователя по логину");
     }
 

@@ -2,6 +2,7 @@ import 'package:bg_app_ui/widgets/commons/buttons/default_cancel_text_button.dar
 import 'package:bg_app_ui/widgets/commons/buttons/default_text_button.dart';
 import 'package:bg_app_ui/widgets/commons/types.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class InviteFriendPage extends StatefulWidget {
   const InviteFriendPage({super.key});
@@ -36,6 +37,8 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
   }
 
   Future<String?> _sendEmailInvireAndReturn() async {
+    var logger = Logger(runtimeType.toString());
+    
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
@@ -47,7 +50,7 @@ class _InviteFriendPageState extends State<InviteFriendPage> {
           DefaultTextButton(
             text: "Понятно",
             callback: () {
-              print("отправляю приглашение!");
+              logger.info("Отправляю приглашение для ${_textController.text}!");
               Navigator.of(
                 context,
               ).popUntil(ModalRoute.withName(AppRoutes.home));
