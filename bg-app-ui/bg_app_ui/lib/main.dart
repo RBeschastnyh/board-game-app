@@ -1,32 +1,61 @@
 import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/di/dependencies.dart';
+import 'package:bg_app_ui/model/backend/session_service.dart';
+import 'package:bg_app_ui/model/repository/local_db.dart';
+import 'package:bg_app_ui/model/repository/session/session_repository.dart';
+import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
 import 'package:bg_app_ui/model/tesera/tesera_service.dart';
-import 'package:bg_app_ui/widgets/board/create_board.dart';
-import 'package:bg_app_ui/widgets/board/invite_page.dart';
-import 'package:bg_app_ui/widgets/board/reg_tesera_page.dart';
-import 'package:bg_app_ui/widgets/commons/types.dart';
-import 'package:bg_app_ui/widgets/games/games_list_page.dart';
-import 'package:bg_app_ui/widgets/home/home_page.dart';
-import 'package:bg_app_ui/widgets/table/create_table_page.dart';
-import 'package:bg_app_ui/widgets/table/join_table_page.dart';
+import 'package:bg_app_ui/view/board/create_board.dart';
+import 'package:bg_app_ui/view/board/invite_page.dart';
+import 'package:bg_app_ui/view/board/reg_tesera_page.dart';
+import 'package:bg_app_ui/view/commons/types.dart';
+import 'package:bg_app_ui/view/games/games_list_page.dart';
+import 'package:bg_app_ui/view/home/home_page.dart';
+import 'package:bg_app_ui/view/login/login_page.dart';
+import 'package:bg_app_ui/view/table/create_table_page.dart';
+import 'package:bg_app_ui/view/table/join_table_page.dart';
+import 'package:bg_app_ui/viewmodel/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  var config = AppConfig.fromConfigFile();
+// ignore: depend_on_referenced_packages
+import 'package:flutter/widgets.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await LocalDb.initialize();
+
+  AppConfig config = AppConfig.fromConfigFile();
   AppCache appCache = AppCache();
+  LocalUserRepository localUserRepository = LocalUserRepository();
+  SessionRepository sessionRepository = SessionRepository();
+  AuthService authService = AuthService(sessionRepository: sessionRepository);
+
+  bool isAuth = await authService.isUserAuthenticated();
 
   runApp(
     MultiProvider(
-      providers: buildDependencies(config, appCache),
-      child: const MyApp(),
+      providers: buildDependencies(
+        config, 
+        appCache,
+        localUserRepository,
+        sessionRepository,
+        authService
+      ),
+      child: MyApp(isAuthenticated: isAuth),
     )
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isAuthenticated;
+
+  const MyApp({
+    super.key, 
+    required this.isAuthenticated
+  });
 
   // This widget is the root of your application.
   @override
@@ -36,8 +65,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: AppRoutes.home,
+      initialRoute: isAuthenticated ? AppRoutes.home : AppRoutes.login,
       routes: {
+        AppRoutes.login: (context) => LoginPage(
+          sessionRepository: context.read<SessionRepository>(),
+          sessionService: context.read<SessionService>(),
+        ),
         AppRoutes.home: (context) => const HomePage(),
         AppRoutes.invite: (context) => const InviteFriendPage(),
         AppRoutes.tableMenu: (context) => const BgAppCreateBoard(),

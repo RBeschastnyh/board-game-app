@@ -6,9 +6,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.strawberry.boardgame.web.data.dto.CreateUserRequest;
 import ru.strawberry.boardgame.web.data.entity.User;
+import ru.strawberry.boardgame.web.exception.DuplicateEntityException;
 import ru.strawberry.boardgame.web.repository.UserRepository;
 import ru.strawberry.boardgame.web.service.UserService;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @Slf4j
@@ -26,8 +28,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(CreateUserRequest request) {
+        if (userRepository.checkUserExistsByLogin(request.getLogin())) {
+            log.info("Attempting to create user {} while it exists", request.getLogin());
+
+            throw new DuplicateEntityException("Логин занят");
+        }
+
         User user = User.builder()
-                .login(request.getLogin())
+                .id(UUID.randomUUID())
+                .login(request.getLogin().toLowerCase(Locale.ROOT))
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())

@@ -1,4 +1,5 @@
 {
     "TESERA_URL": "https://api.tesera.ru",
-    "TESERA_TIMEOUT": 5000
+    "TESERA_TIMEOUT": 5000,
+    "BACKEND_URL": "http://10.0.2.2:8081"
 }

@@ -1,9 +1,11 @@
 class AppConfig {
 
   final TeseraConfig teseraConfig;
+  final BackendConfig backendConfig;
 
   const AppConfig({
-    required this.teseraConfig
+    required this.teseraConfig,
+    required this.backendConfig
   });
 
   factory AppConfig.fromConfigFile() {
@@ -11,6 +13,9 @@ class AppConfig {
       teseraConfig: const TeseraConfig(
         url: String.fromEnvironment("TESERA_URL"), 
         timeout: int.fromEnvironment("TESERA_TIMEOUT")
+      ),
+      backendConfig: const BackendConfig(
+        backendUrl: String.fromEnvironment("BACKEND_URL")
       )
     );
   }
@@ -23,5 +28,13 @@ class TeseraConfig {
   const TeseraConfig({
     required this.url,
     required this.timeout
+  });
+}
+
+class BackendConfig {
+  final String backendUrl;
+
+  const BackendConfig({
+    required this.backendUrl
   });
 }

@@ -1,4 +1,4 @@
-package com.example.bg_app_ui
+package ru.strawberry.bg_app
 
 import io.flutter.embedding.android.FlutterActivity
 

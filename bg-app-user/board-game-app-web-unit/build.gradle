@@ -18,12 +18,13 @@ ext {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     implementation "org.springframework.security:spring-security-crypto:$springSecurityCryptoVersion"
     implementation "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
     implementation "org.hibernate:hibernate-core:$hibernateVersion"
     implementation "org.postgresql:postgresql:$postgresqlVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1"
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
