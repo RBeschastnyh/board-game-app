@@ -2,6 +2,7 @@ import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/di/dependencies.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
+import 'package:bg_app_ui/model/repository/games/games_repository.dart';
 import 'package:bg_app_ui/model/repository/local_db.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
 import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
@@ -26,11 +27,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await LocalDb.initialize();
+  AppCache.initialize();
 
   AppConfig config = AppConfig.fromConfigFile();
-  AppCache appCache = AppCache();
   LocalUserRepository localUserRepository = LocalUserRepository();
   SessionRepository sessionRepository = SessionRepository();
+  GamesRepository gamesRepository = GamesRepository();
   AuthService authService = AuthService(sessionRepository: sessionRepository);
 
   bool isAuth = await authService.isUserAuthenticated();
@@ -39,9 +41,9 @@ void main() async {
     MultiProvider(
       providers: buildDependencies(
         config, 
-        appCache,
         localUserRepository,
         sessionRepository,
+        gamesRepository,
         authService
       ),
       child: MyApp(isAuthenticated: isAuth),
@@ -76,8 +78,12 @@ class MyApp extends StatelessWidget {
         AppRoutes.tableMenu: (context) => const BgAppCreateBoard(),
         AppRoutes.createTable: (context) => const CreateTablePage(),
         AppRoutes.joinTable: (context) => const JoinTablePage(),
-        AppRoutes.gamesList: (context) => const GamesListPage(),
-        AppRoutes.regTesera: (context) => RegTeseraUserPage(teseraService: context.read<TeseraService>())
+        AppRoutes.gamesList: (context) => GamesListPage(
+          gamesRepository: context.read<GamesRepository>(),
+        ),
+        AppRoutes.regTesera: (context) => RegTeseraUserPage(
+          teseraService: context.read<TeseraService>(), 
+          localUserRepository: context.read<LocalUserRepository>())
       },
     );
   }

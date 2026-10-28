@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/model/repository/session/local_session.dart';
 import 'package:bg_app_ui/utils/http_utils.dart';
 import 'package:bg_app_ui/utils/logger.dart';
@@ -13,7 +14,7 @@ class SessionService {
   final String baseUrl;
 
   SessionService({
-    required this.baseUrl,
+    required this.baseUrl
   });
 
   Future<bool> validateSession(String sessionId, String login) async {
@@ -63,7 +64,20 @@ class SessionService {
 
     if (isOk(response.statusCode)) {
       var body = jsonDecode(response.body);
-      return LocalSession(id: body['id'], sessionId: body['session_id'], username: body['login'], validFrom: body['valid_from'], validUntil: body['valid_until']);
+      _logger.info(body);
+      LocalSession ls = LocalSession(
+        id: body['id'], 
+        sessionId: body['sessionId'], 
+        username: body['login'], 
+        validFrom: DateTime.parse(body['validFrom']), 
+        validUntil: DateTime.parse(body['validUntil']), 
+        lastLogin: DateTime.parse(body['lastLogin'])
+      );
+
+      AppCache.getInstance().put("current_session_id", body['sessionId']);
+      AppCache.getInstance().put("current_session_login", body['login']);
+
+      return ls;
     }
 
     return null;

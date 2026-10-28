@@ -11,7 +11,7 @@ public class AppSessionDTOConverter {
     public static AppSessionDTO fromEntity(AppSession appSession) {
         return AppSessionDTO.builder()
                 .sessionId(appSession.getSessionId())
-                .userId(Optional.ofNullable(appSession.getUser()).map(User::getId).orElse(null))
+                .login(Optional.ofNullable(appSession.getUser()).map(User::getLogin).orElse(null))
                 .validFrom(appSession.getValidFrom())
                 .validUntil(appSession.getValidUntil())
                 .lastLogin(appSession.getLastLogin())

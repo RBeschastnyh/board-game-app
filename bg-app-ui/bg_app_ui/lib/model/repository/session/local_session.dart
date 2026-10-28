@@ -4,6 +4,7 @@ class LocalSession {
   final String username;
   final DateTime validFrom;
   final DateTime validUntil;
+  final DateTime lastLogin;
 
   const LocalSession({
     required this.id,
@@ -11,6 +12,7 @@ class LocalSession {
     required this.username,
     required this.validFrom,
     required this.validUntil,
+    required this.lastLogin,
   });
 
   Map<String, Object?> toMap() {
@@ -18,8 +20,9 @@ class LocalSession {
       'id': id,
       'session_id': sessionId,
       'username': username,
-      'valid_from': validFrom,
-      'valid_until': validUntil
+      'valid_from': validFrom.toIso8601String(),
+      'valid_until': validUntil.toIso8601String(),
+      'last_login': lastLogin.toIso8601String()
     };
   }
 }

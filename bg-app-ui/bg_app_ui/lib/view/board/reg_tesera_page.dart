@@ -1,4 +1,6 @@
+import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/exceptions/user_not_found_exception.dart';
+import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
 import 'package:bg_app_ui/model/tesera/tesera_service.dart';
 import 'package:bg_app_ui/model/tesera_user.dart';
 import 'package:bg_app_ui/utils/logger.dart';
@@ -10,10 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 class RegTeseraUserPage extends StatefulWidget {
-  const RegTeseraUserPage({super.key, required TeseraService teseraService})
-    : _teseraService = teseraService;
+  const RegTeseraUserPage({
+    super.key, 
+    required TeseraService teseraService,
+    required LocalUserRepository localUserRepository
+  })
+    : _teseraService = teseraService, _localUserRepository = localUserRepository;
 
   final TeseraService _teseraService;
+  final LocalUserRepository _localUserRepository;
 
   @override
   State<StatefulWidget> createState() => _RegTeseraUserPageState();
@@ -50,6 +57,7 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
     _logger.info("Найден ${user.username}");
 
     _currentUser = user;
+    AppCache.getInstance().put("temp_tesera_user", user);
     setState(() {
       _isErrorOnUsernameInput = false;
     });
@@ -94,6 +102,10 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
             text: "Ок",
             callback: () {
               _logger.info("Сохраняем пользователя ${_currentUser.username}");
+              
+              AppCache.getInstance().put("current_tesera_user", AppCache.getInstance().get<TeseraUser>("temp_tesera_user"));
+              // сохранить информацию о пользователе тесеры в локальную базу
+              // отправить обновление на сервер
               
               Navigator.of(
                 context,

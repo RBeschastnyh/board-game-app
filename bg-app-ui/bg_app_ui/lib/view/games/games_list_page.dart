@@ -1,38 +1,66 @@
+import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/model/games.dart';
+import 'package:bg_app_ui/model/repository/games/games_repository.dart';
+import 'package:bg_app_ui/model/tesera_user.dart';
 import 'package:bg_app_ui/utils/logger.dart';
 import 'package:bg_app_ui/view/commons/buttons/bg_app_home_button.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 class GamesListPage extends StatefulWidget {
-  const GamesListPage({super.key});
+  const GamesListPage({
+    super.key,
+    required GamesRepository gamesRepository
+  }) : _gamesRepository = gamesRepository;
+
+  final GamesRepository _gamesRepository;
 
   @override
   State<StatefulWidget> createState() => _GamesListPageState();
 }
 
 class _GamesListPageState extends State<GamesListPage> {
-  // final List<Games> _games = [];
+  late List<Games> _games;
+  late bool _gamesListIsEmpty = true;
+  late bool _allowSyncGames;
+  late bool _allowUploadGames;
+  
   static final Logger _logger = initLogger('_GamesListPageState');
 
-  final List<Games> _games = [
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-    Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4)
-  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    TeseraUser? teseraUser = AppCache.getInstance().get<TeseraUser>("current_tesera_user");
+    if (teseraUser != null) {
+      _allowSyncGames = true;
+      _allowUploadGames = true;
+    } else {
+      
+    }
+
+    _games = [
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
+      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4)
+    ];
+
+    _gamesListIsEmpty = _games.isEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(leading: BackButton()),
       body: Center(
-        child: _games.isEmpty ? _getEmptyListBody() : _createGamesListView(),
+        child: _gamesListIsEmpty ? _getEmptyListBody() : _createGamesListView(),
       ),
       floatingActionButton: BgAppHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -56,14 +84,14 @@ class _GamesListPageState extends State<GamesListPage> {
             children: [
               Column(
                 children: [
-                  Text(_games[index].getDescription ?? ""),
+                  Text(_games[index].description ?? ""),
                   Row(
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Сыграно ${_games[index].getGamesPlayed}"),
-                          Text("Побед ${_games[index].getGamesWon}"),
+                          Text("Сыграно ${_games[index].gamesPlayed}"),
+                          Text("Побед ${_games[index].gamesWon}"),
                           Text("Win-rate ${_games[index].winRate}"),
                         ],
                       ),

@@ -17,17 +17,15 @@ class TeseraService {
   static final Logger _logger = initLogger('TeseraService');
 
   final String baseUrl;
-  final AppCache appCache;
   final LocalUserRepository localUserRepository;
 
   const TeseraService({
     required this.baseUrl,
-    required this.appCache,
     required this.localUserRepository
   });
 
   Future<TeseraUser> getTeseraUserIfExists(String teseraUserName) async {
-    TeseraUser? requestedUser = appCache.get<TeseraUser>(teseraUserName.toLowerCase());
+    TeseraUser? requestedUser = AppCache.getInstance().get<TeseraUser>(teseraUserName.toLowerCase());
     if (requestedUser != null) {
       return Future.syncValue(requestedUser);
     }
@@ -64,7 +62,7 @@ class TeseraService {
       throw HttpException("При отправке запроса возникла ошибка. Разбираемся");
     }
 
-    TeseraUser teseraUser = appCache.put<TeseraUser>(teseraUserName.toLowerCase(), TeseraUser.fromJson(jsonDecode(response.body) as Map<String, dynamic>));
+    TeseraUser teseraUser = AppCache.getInstance().put<TeseraUser>(teseraUserName.toLowerCase(), TeseraUser.fromJson(jsonDecode(response.body) as Map<String, dynamic>));
 
     return Future.syncValue(teseraUser);
   }

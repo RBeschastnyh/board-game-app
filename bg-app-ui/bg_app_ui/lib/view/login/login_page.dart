@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
 import 'package:bg_app_ui/model/repository/session/local_session.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
@@ -65,37 +66,49 @@ class _LoginPageState extends State<LoginPage> {
     
   }
 
-  void _handleLoginCallback() async {
-    _logger.fine('${widget.sessionRepository}');
+  Future<bool> _handleLoginCallback() async {
     bool everAuth = await widget.sessionRepository
       .checkCurrentLoginEverAuthenticated(_currentLogin!);
+
+    _logger.fine('ever auth: $everAuth');
 
     if (everAuth) {
       String? sessionId = await widget.sessionRepository.getLastSessionIdForUser(_currentLogin!);
 
       if (sessionId == null) {
         _logger.info("Requested session for user $_currentLogin which has not one");
-      } else {
-        widget.sessionService.validateSession(sessionId, _currentLogin!);
-        widget.sessionRepository.updateSessionFor(_currentLogin!);
 
         setState(() {
-          _success = true;
+          _errorOnLoginText = 'Необходим вход';
         });
+
+        return false;
       }
+
+      _logger.fine('found session: $sessionId');
+      widget.sessionService.validateSession(sessionId, _currentLogin!);
+      widget.sessionRepository.updateSessionFor(_currentLogin!);
+
+      AppCache.getInstance().put("current_user", _currentLogin!);
+
+      return true;
     } else {
       if (_currentPassword == null) {
         setState(() {
           _errorOnLoginText = 'Необходим вход';
         });
-      } else {
-        LocalSession? session = await widget.sessionService.auth(_currentLogin!, _currentPassword!);
 
-        widget.sessionRepository.save(session);
+        return false;
       }
-    }
 
-    _logger.info('==== $_currentLogin');
+      LocalSession? session = await widget.sessionService.auth(_currentLogin!, _currentPassword!);
+
+      widget.sessionRepository.save(session);
+
+      AppCache.getInstance().put("current_user", _currentLogin!);
+
+      return true;
+    }
   }
 
   @override
@@ -168,12 +181,10 @@ class _LoginPageState extends State<LoginPage> {
             Spacer(),
             DefaultTextButton(
               text: 'Вперёд!', 
-              callback: _validLogin && _validPassword ? () {
-                _handleLoginCallback();
-                if (_success) {
+              callback: _validLogin && _validPassword ? () async {
+                if (await _handleLoginCallback()) {
                   Navigator.pushNamed(context, AppRoutes.home);
                 }
-
               } : null
             ),
             SizedBox(width: 20.0, height: 60.0),

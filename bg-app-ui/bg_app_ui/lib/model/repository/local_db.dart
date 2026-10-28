@@ -24,14 +24,7 @@ class LocalDb {
         },
         onCreate: (db, version) {
           print('CREATED');
-          db.execute('''create table if not exists sessions (
-            id integer primary key AUTOINCREMENT not null,
-            session_id text not null,
-            username text not null,
-            valid_from text not null,
-            valid_until text not null 
-          )''');
-          return db
+          db
             .execute(
               '''create table if not exists users (
                 id integer primary key AUTOINCREMENT not null, 
@@ -40,6 +33,38 @@ class LocalDb {
                 last_visited text
                 )'''
             );
+          db.execute('''
+            create table if not exists games (
+              id integer not null primary key autoincrement,
+              tesera_game_id integer,
+              game_title text not null,
+              eng_game_title text,
+              user_rating numeric,
+              is_addition boolean not null,
+              production_year integer,
+              players_min int,
+              players_max int,
+              recommended_players_min int,
+              recommended_players_max int
+            )
+          ''');
+          db.execute('''
+            create table if not exists user_game_map (
+              id integer primary key autoincrement not null,
+              user_id integer not null,
+              game_id integer not null,
+              foreign key (user_id) references users(id)
+              foreign key (game_id) references games(id)
+            )
+          ''');
+          return db.execute('''create table if not exists sessions (
+            id integer primary key AUTOINCREMENT not null,
+            session_id text not null,
+            username text not null,
+            valid_from text not null,
+            valid_until text not null,
+            last_login text not null
+          )''');
         },
         version: 1
       );

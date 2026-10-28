@@ -16,7 +16,7 @@ public class AppSessionDTO {
 
     private UUID id;
     private UUID sessionId;
-    private UUID userId;
+    private String login;
     private LocalDateTime validFrom;
     private LocalDateTime validUntil;
     private LocalDateTime lastLogin;

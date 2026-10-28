@@ -1,6 +1,7 @@
 import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
+import 'package:bg_app_ui/model/repository/games/games_repository.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
 import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
 import 'package:bg_app_ui/model/tesera/tesera_service.dart';
@@ -9,23 +10,19 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> buildDependencies(
-    AppConfig config, 
-    AppCache appCache,
+    AppConfig config,
     LocalUserRepository localUserRepository,
     SessionRepository sessionRepository,
+    GamesRepository gamesRepository,
     AuthService authService
   ) {
   return [
     Provider<AppConfig>.value(
       value: config,
     ),
-    Provider<AppCache>.value(
-      value: appCache,
-    ),
     Provider<TeseraService>(
       create: (_) => TeseraService(
         baseUrl: config.teseraConfig.url,
-        appCache: appCache,
         localUserRepository: localUserRepository
       ),
     ),
@@ -42,6 +39,9 @@ List<SingleChildWidget> buildDependencies(
     ),
     Provider<LocalUserRepository>.value(
       value: localUserRepository
+    ),
+    Provider<GamesRepository>.value(
+      value: gamesRepository
     )
   ];
 }
