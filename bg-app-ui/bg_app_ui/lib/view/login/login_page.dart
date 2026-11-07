@@ -62,8 +62,6 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     _currentPassword = sha256.convert(utf8.encode(currentText)).toString();
-    _logger.fine("======= $_currentPassword");
-    
   }
 
   Future<bool> _handleLoginCallback() async {

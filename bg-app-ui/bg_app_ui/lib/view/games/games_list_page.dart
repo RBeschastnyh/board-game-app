@@ -1,19 +1,25 @@
 import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/model/games.dart';
 import 'package:bg_app_ui/model/repository/games/games_repository.dart';
+import 'package:bg_app_ui/model/repository/games/tesera_game.dart';
+import 'package:bg_app_ui/model/repository/user/local_user.dart';
+import 'package:bg_app_ui/model/tesera/tesera_service.dart';
 import 'package:bg_app_ui/model/tesera_user.dart';
 import 'package:bg_app_ui/utils/logger.dart';
 import 'package:bg_app_ui/view/commons/buttons/bg_app_home_button.dart';
+import 'package:bg_app_ui/view/commons/buttons/default_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 class GamesListPage extends StatefulWidget {
   const GamesListPage({
     super.key,
-    required GamesRepository gamesRepository
-  }) : _gamesRepository = gamesRepository;
+    required GamesRepository gamesRepository,
+    required TeseraService teseraService
+  }) : _gamesRepository = gamesRepository, _teseraService = teseraService;
 
   final GamesRepository _gamesRepository;
+  final TeseraService _teseraService;
 
   @override
   State<StatefulWidget> createState() => _GamesListPageState();
@@ -112,7 +118,33 @@ class _GamesListPageState extends State<GamesListPage> {
 
   Widget _getEmptyListBody() {
     return Column(
-      children: [Spacer(), Text("В списке игр пока пусто :("), Spacer()],
+      children: [
+        Spacer(), 
+        Text("В списке игр пока пусто :("),
+        SizedBox(width: 20.0, height: 20.0,),
+        AppCache.getInstance().get("current_tesera_user") != null ?
+        DefaultTextButton(
+          text: "Загрузить с Tesera",
+          callback: _handelLoadTeseraGames,
+        ) : SizedBox.shrink(), 
+        Spacer()
+      ],
     );
+  }
+
+  void _handelLoadTeseraGames() async {
+    List<Games> list = (await widget._teseraService.findGamesByTeseraUsername())
+      .map((tGame) => tGame.toGame())
+      .toList();
+
+    _logger.fine(list.toString());
+
+    String localUsername = AppCache.getInstance().get<String>("current_user")!;
+
+    widget._gamesRepository.saveList(list, localUsername);
+
+    setState(() {
+      _games = list;
+    });
   }
 }

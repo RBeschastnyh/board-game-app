@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.joinTable: (context) => const JoinTablePage(),
         AppRoutes.gamesList: (context) => GamesListPage(
           gamesRepository: context.read<GamesRepository>(),
+          teseraService: context.read<TeseraService>(),
         ),
         AppRoutes.regTesera: (context) => RegTeseraUserPage(
           teseraService: context.read<TeseraService>(), 

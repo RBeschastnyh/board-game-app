@@ -1,52 +1,46 @@
 class Games {
 
   final String gameName;
+  final String? gameNameEng;
+  final int? teseraGameId;
+  final int? userId;
   final String? image;
   final String? description;
+  final int? rating;
   final int gamesPlayed;
   final int gamesWon;
+  final bool isAddition; 
   final int? minPlayers;
   final int? maxPlayers;
   final int? recommendedPlayersMin;
   final int? recommendedPlayersMax;
+  final int? year;
 
   const Games({
     required this.gameName,
     required this.gamesPlayed,
     required this.gamesWon,
+    required this.isAddition,
+    this.year,
+    this.userId,
     this.image,
+    this.gameNameEng,
+    this.teseraGameId,
     this.description,
     this.minPlayers,
     this.maxPlayers,
+    this.rating,
     this.recommendedPlayersMin,
     this.recommendedPlayersMax,
   });
 
-  // const Games.newAdded(
-  //   String gameName,
-  //   String image,
-  //   String description,
-  //   int minPlayers,
-  //   int maxPlayers,
-  //   int recommendedPlayers,
-  // ) : _gameName = gameName, _image = image, _description = description, _gamesPlayed = 0, _gamesWon = 0, _minPlayers = minPlayers, _maxPlayers = maxPlayers, _recommendedPlayers = recommendedPlayers;
-
-  // const Games.withoutImage(
-  //   String gameName,
-  //   String description,
-  //   int minPlayers,
-  //   int maxPlayers,
-  //   int recommendedPlayers,
-  // ) : _gameName = gameName, _image = null, _description = description, _gamesPlayed = 0, _gamesWon = 0, _minPlayers = minPlayers, _maxPlayers = maxPlayers, _recommendedPlayers = recommendedPlayers;
-
-  // String get getName => _gameName;
-  // String? get getImage => _image;
-  // String? get getDescription => _description;
-  // int get getGamesPlayed => _gamesPlayed;
-  // int get getGamesWon => _gamesWon;
-  // int get getMinPlayers => _minPlayers;
-  // int get getMaxPlayers => _maxPlayers;
-  // int get getRecommendedPlayers => _recommendedPlayers;
   double get winRate => gamesWon / (gamesPlayed > 0 ? gamesPlayed : 1);
+
+  @override
+  String toString() {
+    return """
+      {"gameName" : $gameName, "gameNameEng": $gameNameEng, "description": $description, "gamesWon": $gamesWon, "isAddition": $isAddition, "year": $year, "userId": $userId, "image": $image, "teseraGameId": $teseraGameId, "minPlayers": $minPlayers, "maxPlayers": $maxPlayers, "rating": $rating, "recommendedPlayersMin": $recommendedPlayersMin, "recommendedPlayersMax": $recommendedPlayersMax}
+    """;
+  }
   
 }

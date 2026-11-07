@@ -16,7 +16,7 @@ class LocalDb {
 
   static Future<LocalDb> initialize() async {
     if (_instance == null) {
-      deleteDatabase(join(await getDatabasesPath(), 'party.db'));
+      // deleteDatabase(join(await getDatabasesPath(), 'party.db'));
       Future<Database> newDb = openDatabase(
         join(await getDatabasesPath(), 'party.db'),
         onOpen: (db) => {

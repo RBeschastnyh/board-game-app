@@ -1,3 +1,5 @@
+import 'package:bg_app_ui/model/games.dart';
+
 class TeseraGame {
 
   final String title;
@@ -19,11 +21,21 @@ class TeseraGame {
   factory TeseraGame.fromJson(Map<String, dynamic> jsonValue) {
     return TeseraGame(
       title: jsonValue['game']?['title'], 
-      englishTitle: jsonValue['game']?['title2'], 
+      englishTitle: jsonValue['game']?['title2'] ?? jsonValue['game']?['title3'] ?? jsonValue['game']?['title'], 
       isAddition: jsonValue['game']?['isAddition'],
       year: jsonValue['game']?['year'],
       rating: jsonValue['game']?['ratingUser'],
       description: jsonValue['game']?['descriptionShort'],
+    );
+  }
+
+  Games toGame() {
+    return Games(
+      gameName: this.title, 
+      gamesPlayed: 0, 
+      gamesWon: 0,
+      description: this.description,
+      isAddition: this.isAddition
     );
   }
 }
