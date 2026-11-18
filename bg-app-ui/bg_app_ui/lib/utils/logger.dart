@@ -41,7 +41,7 @@ Logger initLogger(String serviceName) {
     });
   }
 
-  logger.level = Level.ALL;
+  logger.level = Level.FINEST;
 
   return logger;
 }

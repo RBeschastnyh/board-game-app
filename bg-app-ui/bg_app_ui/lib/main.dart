@@ -2,6 +2,7 @@ import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/di/dependencies.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
+import 'package:bg_app_ui/model/backend/user_service.dart';
 import 'package:bg_app_ui/model/repository/games/games_repository.dart';
 import 'package:bg_app_ui/model/repository/local_db.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.login: (context) => LoginPage(
           sessionRepository: context.read<SessionRepository>(),
           sessionService: context.read<SessionService>(),
+          localUserRepository: context.read<LocalUserRepository>(),
         ),
         AppRoutes.home: (context) => const HomePage(),
         AppRoutes.invite: (context) => const InviteFriendPage(),
@@ -84,7 +86,9 @@ class MyApp extends StatelessWidget {
         ),
         AppRoutes.regTesera: (context) => RegTeseraUserPage(
           teseraService: context.read<TeseraService>(), 
-          localUserRepository: context.read<LocalUserRepository>())
+          localUserRepository: context.read<LocalUserRepository>(),
+          userService: context.read<UserService>(),
+        )
       },
     );
   }

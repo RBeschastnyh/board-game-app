@@ -1,5 +1,7 @@
 import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/exceptions/user_not_found_exception.dart';
+import 'package:bg_app_ui/model/backend/user_service.dart';
+import 'package:bg_app_ui/model/repository/user/local_user.dart';
 import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
 import 'package:bg_app_ui/model/tesera/tesera_service.dart';
 import 'package:bg_app_ui/model/tesera_user.dart';
@@ -15,12 +17,14 @@ class RegTeseraUserPage extends StatefulWidget {
   const RegTeseraUserPage({
     super.key, 
     required TeseraService teseraService,
-    required LocalUserRepository localUserRepository
+    required LocalUserRepository localUserRepository,
+    required UserService userService
   })
-    : _teseraService = teseraService, _localUserRepository = localUserRepository;
+    : _teseraService = teseraService, _localUserRepository = localUserRepository, _userService = userService;
 
   final TeseraService _teseraService;
   final LocalUserRepository _localUserRepository;
+  final UserService _userService;
 
   @override
   State<StatefulWidget> createState() => _RegTeseraUserPageState();
@@ -105,7 +109,36 @@ class _RegTeseraUserPageState extends State<RegTeseraUserPage> {
               
               AppCache.getInstance().put("current_tesera_user", AppCache.getInstance().get<TeseraUser>("temp_tesera_user"));
               // сохранить информацию о пользователе тесеры в локальную базу
+              LocalUser? localUser = AppCache.getInstance().get<LocalUser>("current_user");
+
+              if (localUser == null) {
+                _logger.shout("No user in local cache!!");
+                return;
+              }
+
+              TeseraUser? teseraUser = AppCache.getInstance().get<TeseraUser>("current_tesera_user");
+              if (teseraUser == null) {
+                _logger.shout('Some severe error occurred!');
+                return;
+              }
+
               // отправить обновление на сервер
+              widget._localUserRepository.updateUser(
+                  LocalUser(
+                      id: localUser.id,
+                      username: localUser.username,
+                      teseraUserId: teseraUser.teseraId,
+                      teseraUsername: teseraUser.username,
+                      lastVisited: localUser.lastVisited
+                  )
+              );
+
+              try {
+                widget._userService.updateTeseraUsername(localUser.username, teseraUser.username, teseraUser.teseraId);
+              } catch (e) {
+                _logger.severe("Error on updating tesera user name");
+                return;
+              }
               
               Navigator.of(
                 context,

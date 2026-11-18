@@ -12,4 +12,6 @@ public interface UserRepository {
     boolean checkUserExistsByLogin(@NonNull String login);
 
     User getByLogin(@NonNull String login);
+
+    void updateTeseraLogin(@NonNull String username, @NonNull String teseraUsername, @NonNull int teseraUserId);
 }

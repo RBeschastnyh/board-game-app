@@ -72,9 +72,11 @@ class TeseraService {
 
     List<TeseraGame> resultList = List.empty(growable: true);
 
-    for (int i = 0; i < 1 + teseraUser.gamesInCollection ~/ 30; i++) {
-      await Future.delayed(Duration(seconds: 1));
+    for (int i = 0; i < 1 + teseraUser.gamesInCollection ~/ 30; ++i) {
+      await Future.delayed(Duration(seconds: 3));
       late Response response;
+
+      _logger.info(Uri.parse("$baseUrl/collections/base/own/${teseraUser.teseraId}?v=1${i > 0 ? "&offset=$i": ""}&limit=30"));
 
       try {
         response = await http.get(

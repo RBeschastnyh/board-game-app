@@ -64,8 +64,11 @@ public class AppSessionRepositoryImpl implements AppSessionRepository {
     @Override
     public AppSession getByLogin(@NonNull String login) {
         return jdbcTemplate.query((connection) -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("select s.id, s.session_id, s.valid_from, s.valid_until, s.last_login " +
-                    "from sessions s inner join users u on u.id = s.user_id where u.login = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("""
+                    select s.id, s.session_id, s.valid_from, s.valid_to, s.last_login, u.id, u.username, u.email, u.login
+                    from sessions s inner join users u on u.id = s.user_id where u.login = ?
+                    order by s.valid_to desc"""
+            );
             preparedStatement.setString(1, login.toLowerCase(Locale.ROOT));
 
             return preparedStatement;
@@ -76,12 +79,20 @@ public class AppSessionRepositoryImpl implements AppSessionRepository {
                 return null;
             }
 
+            User user = User.builder()
+                    .id(UUID.fromString(resultSet.getString(6)))
+                    .username(resultSet.getString(7))
+                    .email(resultSet.getString(8))
+                    .login(resultSet.getString(9))
+                    .build();
+
             return AppSession.builder()
                     .id(UUID.fromString(resultSet.getString(1)))
+                    .user(user)
                     .sessionId(UUID.fromString(resultSet.getString(2)))
-                    .validFrom(LocalDateTime.ofInstant(resultSet.getTimestamp(3).toInstant(), ZoneId.of("Eupore/Moscow")))
-                    .validUntil(LocalDateTime.ofInstant(resultSet.getTimestamp(4).toInstant(), ZoneId.of("Eupore/Moscow")))
-                    .lastLogin(LocalDateTime.ofInstant(resultSet.getTimestamp(5).toInstant(), ZoneId.of("Eupore/Moscow")))
+                    .validFrom(LocalDateTime.ofInstant(resultSet.getTimestamp(3).toInstant(), ZoneId.of("Europe/Moscow")))
+                    .validUntil(LocalDateTime.ofInstant(resultSet.getTimestamp(4).toInstant(), ZoneId.of("Europe/Moscow")))
+                    .lastLogin(LocalDateTime.ofInstant(resultSet.getTimestamp(5).toInstant(), ZoneId.of("Europe/Moscow")))
                     .build();
         });
     }

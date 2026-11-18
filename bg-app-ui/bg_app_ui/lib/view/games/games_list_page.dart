@@ -28,6 +28,7 @@ class GamesListPage extends StatefulWidget {
 class _GamesListPageState extends State<GamesListPage> {
   late List<Games> _games;
   late bool _gamesListIsEmpty = true;
+  late bool _syncInProcess = false;
   late bool _allowSyncGames;
   late bool _allowUploadGames;
   
@@ -38,27 +39,18 @@ class _GamesListPageState extends State<GamesListPage> {
     // TODO: implement initState
     super.initState();
 
+    _logger.info('INIT GAMES LIST');
+
     TeseraUser? teseraUser = AppCache.getInstance().get<TeseraUser>("current_tesera_user");
     if (teseraUser != null) {
       _allowSyncGames = true;
       _allowUploadGames = true;
-    } else {
-      
     }
 
-    _games = [
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4),
-      // Games.withoutImage("Саграда", "Описание Саграды", 2, 4, 4)
-    ];
-
+    _games = [];
     _gamesListIsEmpty = _games.isEmpty;
+
+    initGamesList();
   }
 
   @override
@@ -122,10 +114,9 @@ class _GamesListPageState extends State<GamesListPage> {
         Spacer(), 
         Text("В списке игр пока пусто :("),
         SizedBox(width: 20.0, height: 20.0,),
-        AppCache.getInstance().get("current_tesera_user") != null ?
-        DefaultTextButton(
+        _hasAnyTeseraInformation() ? DefaultTextButton(
           text: "Загрузить с Tesera",
-          callback: _handelLoadTeseraGames,
+          callback: !_syncInProcess ? _handelLoadTeseraGames : null,
         ) : SizedBox.shrink(), 
         Spacer()
       ],
@@ -133,18 +124,44 @@ class _GamesListPageState extends State<GamesListPage> {
   }
 
   void _handelLoadTeseraGames() async {
+    setState(() {
+      _syncInProcess = true;
+    });
+
     List<Games> list = (await widget._teseraService.findGamesByTeseraUsername())
       .map((tGame) => tGame.toGame())
       .toList();
 
-    _logger.fine(list.toString());
+    _logger.fine("Games acquired ${list.length}");
 
-    String localUsername = AppCache.getInstance().get<String>("current_user")!;
+    LocalUser? localUser = AppCache.getInstance().get<LocalUser>("current_user")!;
 
-    widget._gamesRepository.saveList(list, localUsername);
+    widget._gamesRepository.saveList(list, localUser.username.toLowerCase());
 
     setState(() {
       _games = list;
+      _gamesListIsEmpty = list.isEmpty;
+      _syncInProcess = false;
+    });
+  }
+
+  bool _hasAnyTeseraInformation() {
+    return AppCache.getInstance().get("current_tesera_user") != null || AppCache.getInstance().get<LocalUser>("current_user")?.teseraUserId != null;
+  }
+
+  void initGamesList() async {
+    LocalUser? localUser = AppCache.getInstance().get<LocalUser>("current_user");
+
+    if (localUser == null) {
+      _logger.shout("SEVERE PROBLEM OCCURRED, LOCAL USER IN NULL!!!");
+      return;
+    }
+
+    List<Games> list = await widget._gamesRepository.getAllGamesByUsername(localUser.username);
+
+    setState(() {
+      _games = list;
+      _gamesListIsEmpty = list.isEmpty;
     });
   }
 }

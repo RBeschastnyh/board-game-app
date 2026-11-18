@@ -10,6 +10,10 @@ bool isOk(int code) {
   return code == 200;
 }
 
+bool isCreated(int code) {
+  return code == 201;
+}
+
 bool isNotFound(int code) {
   return code == 404;
 }

@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.strawberry.boardgame.web.data.entity.User;
+import ru.strawberry.boardgame.web.exception.DBException;
 import ru.strawberry.boardgame.web.repository.UserRepository;
 
 import java.sql.PreparedStatement;
@@ -68,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
         return postgresJdbcTemplate.query((connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     """
-                        select u.id, u.username, u.email, u.login, u.password from users u
+                        select u.id, u.username, u.email, u.login, u.password, u.tesera_username, u.tesera_user_id from users u
                         where u.login = ?
                     """
             );
@@ -83,7 +84,29 @@ public class UserRepositoryImpl implements UserRepository {
                     .login(resultSet.getString(4))
                     .username(resultSet.getString(2))
                     .password(resultSet.getString(5))
+                    .teseraUsername(resultSet.getString(6))
+                    .teseraUserId(resultSet.getInt(7))
                     .build();
         });
+    }
+
+    @Override
+    public void updateTeseraLogin(@NonNull String username, @NonNull String teseraUsername, @NonNull int teseraUserId) {
+        int res = postgresJdbcTemplate.update((connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    """
+                        update users set tesera_username = ?, tesera_user_id = ? where login = ?
+                    """
+            );
+            preparedStatement.setString(1, username);
+            preparedStatement.setInt(2, teseraUserId);
+            preparedStatement.setString(3, teseraUsername);
+
+            return preparedStatement;
+        });
+
+        if (res != 1) {
+            throw new DBException("Error while updating rows, not one");
+        }
     }
 }

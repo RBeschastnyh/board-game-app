@@ -16,7 +16,7 @@ class LocalDb {
 
   static Future<LocalDb> initialize() async {
     if (_instance == null) {
-      // deleteDatabase(join(await getDatabasesPath(), 'party.db'));
+      deleteDatabase(join(await getDatabasesPath(), 'party.db'));
       Future<Database> newDb = openDatabase(
         join(await getDatabasesPath(), 'party.db'),
         onOpen: (db) => {
@@ -28,7 +28,8 @@ class LocalDb {
             .execute(
               '''create table if not exists users (
                 id integer primary key AUTOINCREMENT not null, 
-                username text not null, 
+                username text not null,
+                tesera_user_id integer, 
                 tesera_username text, 
                 last_visited text
                 )'''
@@ -83,9 +84,9 @@ class LocalDb {
     return (await _db).rawQuery(sql);
   }
 
-  // Future<List<Map<String, Object?>>> query() {
-  //   (await _db).query(table)
-  // }
+  Future<List<Map<String, Object?>>> query(String table, {String? where, List<String>? whereArgs}) async {
+    return (await _db).query(table, where: where, whereArgs: whereArgs);
+  }
 
   Future<int> save(String tableName, Map<String, Object?> rawObject) async {
     return (await _db).insert(tableName, rawObject);
@@ -101,5 +102,9 @@ class LocalDb {
     }
 
     return await (await _db).update(tableName, rawObject, where: whereClause, whereArgs: whereArgs);
+  }
+
+  Future<Batch> batch() async {
+    return (await _db).batch();
   }
 }

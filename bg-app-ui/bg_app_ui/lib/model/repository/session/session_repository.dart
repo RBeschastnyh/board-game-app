@@ -35,7 +35,7 @@ class SessionRepository {
         from sessions
         where username=?
       ''',
-      args: [login],
+      args: [login.toLowerCase()],
     );
 
     return res.first['cnt'] as int > 0;
@@ -45,8 +45,8 @@ class SessionRepository {
     var now = DateTime.now();
 
     var res = await _localDb.rawQuery('''
-      update session set valid_from = ?, valid_util = ? where username = ?
-    ''', args: [now, now.add(Duration(days: 30)), login]);
+      update sessions set valid_from = ?, valid_until = ? where username = ?
+    ''', args: [now.toIso8601String(), now.add(Duration(days: 30)).toIso8601String(), login.toLowerCase()]);
 
     _logger.info('$res');
 
@@ -56,8 +56,9 @@ class SessionRepository {
   Future<String?> getLastSessionIdForUser(String login) async {
     var res = await _localDb.rawQuery(
       '''
-        select session_id from sessions where username = ? and valid_until <= ?
-      ''', args: [login, DateTime.now()]
+        select session_id from sessions where username = ? and date(valid_until) >= date(?)
+        order by date(valid_until) desc
+      ''', args: [login.toLowerCase(), DateTime.now().toIso8601String()]
     );
 
     if (res.isEmpty) {

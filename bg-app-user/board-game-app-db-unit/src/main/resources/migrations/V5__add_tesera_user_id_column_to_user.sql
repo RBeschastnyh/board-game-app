@@ -1,0 +1,1 @@
+alter table ${current_schema}.users add column tesera_user_id int8;

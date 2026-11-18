@@ -18,4 +18,6 @@ public class User implements Serializable {
     private String login;
     private String username;
     private String password;
+    private int teseraUserId;
+    private String teseraUsername;
 }

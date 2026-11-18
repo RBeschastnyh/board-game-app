@@ -1,6 +1,7 @@
 import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/config/app_config.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
+import 'package:bg_app_ui/model/backend/user_service.dart';
 import 'package:bg_app_ui/model/repository/games/games_repository.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
 import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
@@ -30,6 +31,11 @@ List<SingleChildWidget> buildDependencies(
       create: (_) => SessionService(
         baseUrl: config.backendConfig.backendUrl
       ),
+    ),
+    Provider<UserService>(
+        create: (_) => UserService(
+            appConfig: config
+        )
     ),
     Provider<AuthService>.value(
       value: authService

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.strawberry.boardgame.web.data.dto.CreateUserRequest;
+import ru.strawberry.boardgame.web.data.dto.UpdateTeseraUsernameRequest;
 import ru.strawberry.boardgame.web.data.entity.User;
 import ru.strawberry.boardgame.web.exception.DuplicateEntityException;
 import ru.strawberry.boardgame.web.repository.UserRepository;
@@ -44,5 +45,26 @@ public class UserServiceImpl implements UserService {
 
         UUID uuid = userRepository.save(user);
         log.info("Created user {} with uuid {}", request.getLogin(), uuid);
+    }
+
+    @Override
+    public void updateTeseraUsername(UpdateTeseraUsernameRequest request) {
+        log.info("updating tesera information for user {}, {}", request.getTeseraUsername(), request);
+        if (request.getUsername() == null) {
+            log.error("Username can not be null");
+            throw new IllegalArgumentException("Пустое имя пользователя");
+        }
+
+        if (request.getTeseraUsername() == null) {
+            log.error("Tesera username can not be null");
+            throw new IllegalArgumentException("Пустой логин tesera");
+        }
+
+        try {
+            this.userRepository.updateTeseraLogin(request.getUsername(), request.getTeseraUsername(), request.getTeseraUserId());
+        } catch (Exception e) {
+            log.error("Error occurred while updating tesera login", e);
+        }
+
     }
 }

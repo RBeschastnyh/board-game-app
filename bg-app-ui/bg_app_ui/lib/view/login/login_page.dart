@@ -4,22 +4,27 @@ import 'package:bg_app_ui/cache/internal_cache.dart';
 import 'package:bg_app_ui/model/backend/session_service.dart';
 import 'package:bg_app_ui/model/repository/session/local_session.dart';
 import 'package:bg_app_ui/model/repository/session/session_repository.dart';
+import 'package:bg_app_ui/model/repository/user/local_user.dart';
+import 'package:bg_app_ui/model/repository/user/local_user_repository.dart';
+import 'package:bg_app_ui/model/tesera_user.dart';
 import 'package:bg_app_ui/utils/logger.dart';
 import 'package:bg_app_ui/view/commons/buttons/default_text_button.dart';
 import 'package:bg_app_ui/view/commons/types.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart';
 import 'package:crypto/crypto.dart';
 
 class LoginPage extends StatefulWidget {
   final SessionRepository sessionRepository;
   final SessionService sessionService;
 
+  final LocalUserRepository localUserRepository;
+
   const LoginPage({
     super.key,
     required this.sessionRepository,
-    required this.sessionService
+    required this.sessionService,
+    required this.localUserRepository
   });
 
   @override
@@ -71,6 +76,18 @@ class _LoginPageState extends State<LoginPage> {
     _logger.fine('ever auth: $everAuth');
 
     if (everAuth) {
+      late LocalUser localUser;
+      try {
+        localUser = await widget.localUserRepository.findByLogin(_currentLogin!);
+      } on Exception catch (e, s) {
+        _logger.severe("Error occurred while searching for user", e, s);
+        setState(() {
+          _errorOnLoginText = e.toString();
+        });
+
+        return false;
+      }
+
       String? sessionId = await widget.sessionRepository.getLastSessionIdForUser(_currentLogin!);
 
       if (sessionId == null) {
@@ -87,7 +104,17 @@ class _LoginPageState extends State<LoginPage> {
       widget.sessionService.validateSession(sessionId, _currentLogin!);
       widget.sessionRepository.updateSessionFor(_currentLogin!);
 
-      AppCache.getInstance().put("current_user", _currentLogin!);
+      AppCache.getInstance().put("current_user", localUser);
+
+      if (localUser.teseraUserId != null) {
+        TeseraUser teseraUser = TeseraUser(
+            teseraId: localUser.teseraUserId!,
+            username: localUser.teseraUsername!,
+            possibleName: localUser.username,
+            gamesInCollection: -1
+        );
+        AppCache.getInstance().put("current_tesera_user", teseraUser);
+      }
 
       return true;
     } else {
@@ -100,10 +127,33 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       LocalSession? session = await widget.sessionService.auth(_currentLogin!, _currentPassword!);
+      LocalUser localUser = LocalUser(username: _currentLogin!, lastVisited: DateTime.now());
+
+      late int localId;
+      try {
+        localId = await widget.localUserRepository.saveUser(localUser);
+      } catch (e, s) {
+        _logger.severe(s);
+        _logger.shout("Error while saving user for local db!", e, s);
+        setState(() {
+          _errorOnLoginText = 'Возникла ошибка. Сообщите о ней';
+        });
+        return false;
+      }
 
       widget.sessionRepository.save(session);
 
-      AppCache.getInstance().put("current_user", _currentLogin!);
+      AppCache.getInstance().put("current_user", LocalUser(id: localId, username: localUser.username, lastVisited: localUser.lastVisited));
+
+      if (localUser.teseraUserId != null) {
+        TeseraUser teseraUser = TeseraUser(
+            teseraId: localUser.teseraUserId!,
+            username: localUser.teseraUsername!,
+            possibleName: localUser.username,
+            gamesInCollection: -1
+        );
+        AppCache.getInstance().put("current_tesera_user", teseraUser);
+      }
 
       return true;
     }

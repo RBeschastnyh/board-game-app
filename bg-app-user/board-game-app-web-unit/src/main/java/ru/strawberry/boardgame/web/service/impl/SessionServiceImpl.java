@@ -9,6 +9,7 @@ import ru.strawberry.boardgame.web.data.dto.AuthRequest;
 import ru.strawberry.boardgame.web.data.entity.AppSession;
 import ru.strawberry.boardgame.web.data.entity.User;
 import ru.strawberry.boardgame.web.exception.DataNotFoundException;
+import ru.strawberry.boardgame.web.exception.ReportException;
 import ru.strawberry.boardgame.web.exception.ExceptionAppCodes;
 import ru.strawberry.boardgame.web.exception.StaleDataException;
 import ru.strawberry.boardgame.web.repository.AppSessionRepository;
@@ -34,11 +35,13 @@ public class SessionServiceImpl implements SessionService {
         if (login == null) {
             log.error("Trying request session by null user name!");
 
-            throw new IllegalArgumentException("Неверный идентификатор сессии");
+            throw new IllegalArgumentException("Неверный идентификатор польователя");
         }
 
         if (!userRepository.checkUserExistsByLogin(login)) {
             log.error("Suspicious attempt to get session for user {} which is not registered", login);
+
+            throw new ReportException("Странная попытка входа");
         }
 
         AppSession session = appSessionRepository.getByLogin(login);
@@ -118,6 +121,12 @@ public class SessionServiceImpl implements SessionService {
             log.info("Successful login for user {}", authRequest.getLogin());
             LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
 
+            AppSession sessionByLogin = appSessionRepository.getByLogin(authRequest.getLogin());
+
+            if (sessionByLogin != null && sessionByLogin.getValidUntil().isAfter(now)) {
+                return AppSessionDTOConverter.fromEntity(sessionByLogin);
+            }
+
             AppSession appSession = AppSession.builder()
                     .id(UUID.randomUUID())
                     .sessionId(UUID.randomUUID())
@@ -132,6 +141,8 @@ public class SessionServiceImpl implements SessionService {
             return AppSessionDTOConverter.fromEntity(appSession);
         }
 
-        throw new IllegalStateException();
+        log.error("Passwords don't match!");
+
+        throw new StaleDataException(ExceptionAppCodes.USER_IS_GONE, "Неверный пароль");
     }
 }
